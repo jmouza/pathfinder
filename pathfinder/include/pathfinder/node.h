@@ -1,10 +1,13 @@
 #pragma once
 
 #include <vector>
+#include <optional>
+#include <memory>
 
 #include "pathfinder/position.h"
 #include "pathfinder/constants.h"
 
+/* Represents a node in a 2D grid. */
 class Node
 {
 public:
@@ -12,15 +15,15 @@ public:
     
     /*
     Add `neighbor` to vector of neighbors.
-    @throws std::runtime_error when attempting to add neighbor while number of neighbors is already `MAX_NEIGHBORS`
+    @throws `std::runtime_error` when attempting to add neighbor while number of neighbors is already `MAX_NEIGHBORS`
     */
     void AddNeighbor(Node neighbor); 
 
     std::vector<Node> GetNeighbors() const {return neighbors;}
-    Position GetPosition() const {return position;}
+    Position GetPosition() const;
 
 private:
-    Position position;
-    std::vector<Node> neighbors; 
+    std::optional<Position> position;
+    std::vector<Node> neighbors;
 };
 
