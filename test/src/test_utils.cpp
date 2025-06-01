@@ -3,23 +3,27 @@
 #include "helpers.h"
 #include "pathfinder/utils.h"
 
-TEST(UtilsTest, GetSurroundingPositionsZeroZero) {
+TEST(UtilsTest, GetSurroundingPositionsTopLeft) {
     std::vector<Position> positions = GetSurroundingPositions(Position(0,0));
 
-    EXPECT_EQ(positions.size(), 8);
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(-1, -1)));
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(-1, 0)));
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(-1, 1)));
-
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(0, -1)));
+    EXPECT_EQ(positions.size(), 3);
     EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(0, 1)));
-
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1, -1)));
     EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1, 0)));
     EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1, 1)));
 }
 
-TEST(UtilsTest, GetSurroundingPositionsNonZero) {
+TEST(UtilsTest, GetSurroundingPositionsEdge) {
+    std::vector<Position> positions = GetSurroundingPositions(Position(0,1));
+
+    EXPECT_EQ(positions.size(), 5);
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(0, 0)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1, 0)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1, 1)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1, 2)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(0, 2)));
+}
+
+TEST(UtilsTest, GetSurroundingPositionsMiddle) {
     std::vector<Position> positions = GetSurroundingPositions(Position(4,5));
 
     EXPECT_EQ(positions.size(), 8);

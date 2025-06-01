@@ -5,7 +5,9 @@ std::vector<Position> GetSurroundingPositions(Position pos) {
 
     for (int dy = -1; dy <= 1; dy++) {
         for (int dx = -1; dx <= 1; dx++) {
-            if (!(dy == 0 && dx == 0)) {
+            if (dy == 0 && dx == 0) continue;
+
+            if ((pos.x+dx)>=0 && (pos.y+dy)>=0) {
                 output.push_back(Position(pos.x+dx, pos.y+dy));
             }
         }
