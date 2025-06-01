@@ -1,5 +1,6 @@
 add_executable(pathfinder_test
-  src/testtest.cpp
+  src/test_position.cpp
+  src/test_node.cpp
 )
 target_link_libraries(pathfinder_test PRIVATE pathfinder)
 target_link_libraries(pathfinder_test PRIVATE GTest::gtest_main)

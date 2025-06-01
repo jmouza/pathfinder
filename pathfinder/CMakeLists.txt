@@ -1,6 +1,6 @@
 add_library(
     pathfinder STATIC
-    src/dfs.cpp
+    src/node.cpp
 )
 
 target_include_directories(pathfinder PUBLIC include)
