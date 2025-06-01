@@ -12,7 +12,8 @@ class Node
 {
 public:
     Node(Position pos): position(pos) {}
-    
+    bool operator== (const Node &other) const {return this->position == other.GetPosition();}
+
     /*
     Add `neighbor` to vector of neighbors.
     @throws `std::runtime_error` when attempting to add neighbor while number of neighbors is already `MAX_NEIGHBORS`
