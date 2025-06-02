@@ -1,3 +1,6 @@
+#include "pathfinder/grid.h"
+#include "pathfinder/result.h"
+
 /*
 Abstract class representing a pathfinder algorithm. 
 */
@@ -5,5 +8,5 @@ class Algorithm
 {
 public:
     virtual ~Algorithm() = default;
-    virtual void Execute() const = 0;
+    virtual Result Execute(Grid grid) const = 0;
 };

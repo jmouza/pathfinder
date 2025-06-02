@@ -1,6 +1,7 @@
 #include "pathfinder/dfs.h"
 
-#include <iostream>
-void DFS::Execute() {
-    std::cout << "Executing Algorithm DFS" << std::endl;
+Result DFS::Execute(Grid grid) {
+    Result result;
+
+    
 }
