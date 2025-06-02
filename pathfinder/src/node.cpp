@@ -11,7 +11,7 @@ Position Node::GetPosition() const {
     }
     return position.value();
 }
-void Node::AddNeighbor(Node neighbor) {
+void Node::AddNeighbor(Node* neighbor) {
     if (neighbors.size() == MAX_NEIGHBORS) {
         throw std::runtime_error("Node cannot have more than " + std::to_string(MAX_NEIGHBORS) + " neighbors.");
     }

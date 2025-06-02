@@ -5,6 +5,8 @@
 
 #include "pathfinder/node.h"
 
+using VectorOfNodePointers = std::vector<std::shared_ptr<Node>>;
+
 /* 
 Represents a 2D grid of `Node` objects, with (0, 0) being the top-left node. 
 A grid cannot be resized.
@@ -38,23 +40,23 @@ public:
     Get the current `start_node`.
     @throws `std::runtime_error` if `start_node` not set.
     */
-    const Node& GetStartNode() const;
+    Node& GetStartNode() const;
 
     /*
     Get the current `finish_node`.
     @throws `std::runtime_error` if `finish_node` not set.
     */
-    const Node& GetFinishNode() const;
+    Node& GetFinishNode() const;
 
     /*
     Get node at given position from the vector of nodes.
     @throws `std::invalid_argument` if position is not on the grid.
     */
-    const Node& GetNodeAtPosition(Position pos) const;
+    Node& GetNodeAtPosition(Position pos) const;
 
     int GetNrCols() const {return nr_cols;}
     int GetNrRows() const {return nr_rows;}
-    std::vector<Node> GetNodes() const {return nodes;}
+    const VectorOfNodePointers& GetNodes() const {return nodes;}
 
 private:
     int nr_cols;
@@ -62,9 +64,9 @@ private:
 
     std::optional<Position> start_node_position;
     std::optional<Position> finish_node_position;
-    std::vector<Node> nodes; /* Represents the nodes in the 2D grid. */
+    VectorOfNodePointers nodes; /* Represents the nodes in the 2D grid. */
 
     bool IsPositionOnGrid(Position pos) const {return pos.x >= 0 && pos.y >= 0 && pos.x < nr_cols && pos.y < nr_rows;}
     void CreateGrid();
-    void AddNeighbors(Node& node);
+    void LinkNeighbors(Node& node);
 };

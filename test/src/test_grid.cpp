@@ -13,9 +13,16 @@ TEST(GridTest, CreateGrid)
 
     EXPECT_EQ(g.GetNodes().size(), 20);
 
-    for (auto node: g.GetNodes()) {
-        EXPECT_EQ(node.GetNeighbors().size(), GetSurroundingPositions(node.GetPosition(),5,4).size());
+    for (auto &ptr: g.GetNodes()) {
+        Node n = *ptr;
+        EXPECT_EQ(n.GetNeighbors().size(), GetSurroundingPositions(n.GetPosition(),5,4).size());
     }    
+}
+
+TEST(GridTest, InitiallyOnlyDefaultNodes)
+{
+    Grid g(5,4);
+    EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Default), 5*4);
 }
 
 TEST(GridTest, TopLeftNodeHasCorrectNeighbors) 
@@ -23,40 +30,50 @@ TEST(GridTest, TopLeftNodeHasCorrectNeighbors)
     Grid g(5, 4);
 
     Node topleft = g.GetNodeAtPosition(Position(0,0));
-    EXPECT_TRUE(helpers::VectorContainsItem<Node>(topleft.GetNeighbors(), Position(0,1)));
-    EXPECT_TRUE(helpers::VectorContainsItem<Node>(topleft.GetNeighbors(), Position(1,0)));
-    EXPECT_TRUE(helpers::VectorContainsItem<Node>(topleft.GetNeighbors(), Position(1,1)));
+
+    std::vector<Position> positions;
+    for (const auto ptr: topleft.GetNeighbors()) {positions.push_back(ptr->GetPosition());}
+
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(0,1)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1,0)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1,1)));
 }
 
 TEST(GridTest, MiddleNodeHasCorrectNeighbors) 
 {
     Grid g(5, 4);
 
-    Node topleft = g.GetNodeAtPosition(Position(2,1));
-    EXPECT_TRUE(helpers::VectorContainsItem<Node>(topleft.GetNeighbors(), Position(1,0)));
-    EXPECT_TRUE(helpers::VectorContainsItem<Node>(topleft.GetNeighbors(), Position(2,0)));
-    EXPECT_TRUE(helpers::VectorContainsItem<Node>(topleft.GetNeighbors(), Position(3,0)));
+    Node middle = g.GetNodeAtPosition(Position(2,1));
+    std::vector<Position> positions;
+    for (const auto ptr: middle.GetNeighbors()) {positions.push_back(ptr->GetPosition());}
 
-    EXPECT_TRUE(helpers::VectorContainsItem<Node>(topleft.GetNeighbors(), Position(1,1)));
-    EXPECT_TRUE(helpers::VectorContainsItem<Node>(topleft.GetNeighbors(), Position(3,1)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1,0)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(2,0)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(3,0)));
 
-    EXPECT_TRUE(helpers::VectorContainsItem<Node>(topleft.GetNeighbors(), Position(1,2)));
-    EXPECT_TRUE(helpers::VectorContainsItem<Node>(topleft.GetNeighbors(), Position(2,2)));
-    EXPECT_TRUE(helpers::VectorContainsItem<Node>(topleft.GetNeighbors(), Position(3,2)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1,1)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(3,1)));
+
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1,2)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(2,2)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(3,2)));
 }
 
 TEST(GridTest, RightEdgeNodeHasCorrectNeighbors) 
 {
     Grid g(5, 4);
 
-    Node topleft = g.GetNodeAtPosition(Position(3,2));
-    EXPECT_TRUE(helpers::VectorContainsItem<Node>(topleft.GetNeighbors(), Position(2,1)));
-    EXPECT_TRUE(helpers::VectorContainsItem<Node>(topleft.GetNeighbors(), Position(3,1)));
+    Node rightedge = g.GetNodeAtPosition(Position(3,2));
+    std::vector<Position> positions;
+    for (const auto ptr: rightedge.GetNeighbors()) {positions.push_back(ptr->GetPosition());}
 
-    EXPECT_TRUE(helpers::VectorContainsItem<Node>(topleft.GetNeighbors(), Position(2,2)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(2,1)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(3,1)));
 
-    EXPECT_TRUE(helpers::VectorContainsItem<Node>(topleft.GetNeighbors(), Position(2,3)));
-    EXPECT_TRUE(helpers::VectorContainsItem<Node>(topleft.GetNeighbors(), Position(3,3)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(2,2)));
+
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(2,3)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(3,3)));
 }
 
 TEST(GridTest, CreateInvalidGrid)
@@ -86,17 +103,20 @@ TEST(GridTest, GetNodeAtPositionInvalidPos)
 
 TEST(GridTest, GetNodeAtPositionTopLeft)
 {
-    EXPECT_EQ(Grid(5,5).GetNodeAtPosition(Position(0,0)).GetPosition(), Position(0,0));
+    Node n = Grid(5,5).GetNodeAtPosition(Position(0,0));
+    EXPECT_EQ(n.GetPosition(), Position(0,0));
 }
 
 TEST(GridTest, GetNodeAtPositionLast)
 {
-    EXPECT_EQ(Grid(5,5).GetNodeAtPosition(Position(4,4)).GetPosition(), Position(4,4));
+    Node n = Grid(5,5).GetNodeAtPosition(Position(4,4));
+    EXPECT_EQ(n.GetPosition(), Position(4,4));
 }
 
 TEST(GridTest, GetNodeAtPositionMiddle)
 {
-    EXPECT_EQ(Grid(5,5).GetNodeAtPosition(Position(3,2)).GetPosition(), Position(3,2));
+    Node n = Grid(5,5).GetNodeAtPosition(Position(3,2));
+    EXPECT_EQ(n.GetPosition(), Position(3,2));
 }
 
 /* SetStartNode */
@@ -118,6 +138,8 @@ TEST(GridTest, SetStartNode)
     g.SetStartNode(Position(0,1));
 
     EXPECT_EQ(g.GetStartNode().GetPosition(), Position(0,1));
+    EXPECT_EQ(g.GetStartNode().GetNodeType(), NodeType::Start);
+    EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Start), 1);
 }
 
 TEST(GridTest, SetStartNodeOverrideExistingStartNode)
@@ -127,6 +149,7 @@ TEST(GridTest, SetStartNodeOverrideExistingStartNode)
     g.SetStartNode(Position(1,0));
 
     EXPECT_EQ(g.GetStartNode().GetPosition(), Position(1,0));
+    EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Start), 1);
 }
 
 TEST(GridTest, SetStartNodeOverrideFinishNode)
@@ -137,6 +160,9 @@ TEST(GridTest, SetStartNodeOverrideFinishNode)
 
     EXPECT_EQ(g.GetStartNode().GetPosition(), Position(0,1));
     EXPECT_THROW(g.GetFinishNode(), std::runtime_error);
+
+    EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Start), 1);
+    EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Finish), 0);
 }
 
 /* SetFinishNode */
@@ -158,6 +184,8 @@ TEST(GridTest, SetFinishNode)
     g.SetFinishNode(Position(0,1));
 
     EXPECT_EQ(g.GetFinishNode().GetPosition(), Position(0,1));
+    EXPECT_EQ(g.GetFinishNode().GetNodeType(), NodeType::Finish);
+    EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Finish), 1);
 }
 
 TEST(GridTest, SetFinishNodeOverrideExistingFinishNode)
@@ -167,6 +195,7 @@ TEST(GridTest, SetFinishNodeOverrideExistingFinishNode)
     g.SetFinishNode(Position(1,0));
 
     EXPECT_EQ(g.GetFinishNode().GetPosition(), Position(1,0));
+    EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Finish), 1);
 }
 
 TEST(GridTest, SetFinishNodeOverrideStartNode)
@@ -177,4 +206,20 @@ TEST(GridTest, SetFinishNodeOverrideStartNode)
 
     EXPECT_EQ(g.GetFinishNode().GetPosition(), Position(0,1));
     EXPECT_THROW(g.GetStartNode(), std::runtime_error);
+
+    EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Finish), 1);
+    EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Start), 0);
+}
+
+TEST(GridTest, SetStartAndFinishNode)
+{
+    Grid g(5, 4);
+    g.SetStartNode(Position(0,1));
+    g.SetFinishNode(Position(1,0));
+
+    EXPECT_EQ(g.GetStartNode().GetPosition(), Position(0,1));
+    EXPECT_EQ(g.GetFinishNode().GetPosition(), Position(1,0));
+
+    EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Start), 1);
+    EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Finish), 1);
 }

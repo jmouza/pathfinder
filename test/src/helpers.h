@@ -1,6 +1,9 @@
 #pragma once
 
 #include <vector>
+#include <memory>
+
+#include "pathfinder/node.h"
 
 namespace helpers
 {
@@ -14,5 +17,15 @@ namespace helpers
         }
 
         return false;
+    }
+
+    static int NumberOfNodesOfType(const std::vector<std::shared_ptr<Node>> &nodes, NodeType node_type) {
+        int count = 0;
+
+        for (auto &ptr: nodes) {
+            if ((*ptr).GetNodeType() == node_type) count++;
+        }
+
+        return count;
     }
 }
