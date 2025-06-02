@@ -31,7 +31,7 @@ public:
     */
     void AddNeighbor(Node* neighbor); 
 
-    std::vector<Node*> GetNeighbors() const {return neighbors;}
+    const std::vector<Node*> GetNeighbors() const {return neighbors;}
     Position GetPosition() const;
     void SetNodeType(NodeType node_type_) {node_type = node_type_;}
     NodeType GetNodeType() const {return node_type;}
