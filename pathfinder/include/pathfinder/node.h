@@ -5,7 +5,6 @@
 #include <memory>
 
 #include "pathfinder/position.h"
-#include "pathfinder/constants.h"
 
 /* Represents the type of a `Node` on the grid. */
 enum class NodeType 
@@ -25,20 +24,23 @@ public:
     Node(Position pos): position(pos) {}
     bool operator== (const Node &other) const {return this->position == other.GetPosition();}
 
-    /*
-    Add `neighbor` to vector of neighbors.
-    @throws `std::runtime_error` when attempting to add neighbor while number of neighbors is already `MAX_NEIGHBORS`
-    */
-    void AddNeighbor(Node* neighbor); 
-
-    const std::vector<Node*> GetNeighbors() const {return neighbors;}
     Position GetPosition() const;
     void SetNodeType(NodeType node_type_) {node_type = node_type_;}
     NodeType GetNodeType() const {return node_type;}
 
+    struct HashFunction
+    {
+        size_t operator()(const Node& node) const
+        {
+        size_t x_hash = std::hash<int>()(node.position.value().x);
+        size_t y_hash = std::hash<int>()(node.position.value().y) << 1;
+        
+        return x_hash ^ y_hash;
+        }
+    };
+
 private:
     std::optional<Position> position;
-    std::vector<Node*> neighbors;
     enum NodeType node_type = NodeType::Default;
 };
 

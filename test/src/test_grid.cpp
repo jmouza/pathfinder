@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include "pathfinder/grid.h"
-#include "pathfinder/utils.h"
 #include "helpers.h"
 
 /* Constructor */
@@ -12,11 +11,6 @@ TEST(GridTest, CreateGrid)
     EXPECT_EQ(g.GetNrCols(), 4);
 
     EXPECT_EQ(g.GetNodes().size(), 20);
-
-    for (auto &ptr: g.GetNodes()) {
-        Node n = *ptr;
-        EXPECT_EQ(n.GetNeighbors().size(), GetSurroundingPositions(n.GetPosition(),5,4).size());
-    }    
 }
 
 TEST(GridTest, InitiallyOnlyDefaultNodes)
@@ -25,61 +19,127 @@ TEST(GridTest, InitiallyOnlyDefaultNodes)
     EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Default), 5*4);
 }
 
-TEST(GridTest, TopLeftNodeHasCorrectNeighbors) 
-{
-    Grid g(5, 4);
-
-    Node topleft = g.GetNodeAtPosition(Position(0,0));
-
-    std::vector<Position> positions;
-    for (const auto ptr: topleft.GetNeighbors()) {positions.push_back(ptr->GetPosition());}
-
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(0,1)));
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1,0)));
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1,1)));
-}
-
-TEST(GridTest, MiddleNodeHasCorrectNeighbors) 
-{
-    Grid g(5, 4);
-
-    Node middle = g.GetNodeAtPosition(Position(2,1));
-    std::vector<Position> positions;
-    for (const auto ptr: middle.GetNeighbors()) {positions.push_back(ptr->GetPosition());}
-
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1,0)));
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(2,0)));
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(3,0)));
-
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1,1)));
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(3,1)));
-
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1,2)));
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(2,2)));
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(3,2)));
-}
-
-TEST(GridTest, RightEdgeNodeHasCorrectNeighbors) 
-{
-    Grid g(5, 4);
-
-    Node rightedge = g.GetNodeAtPosition(Position(3,2));
-    std::vector<Position> positions;
-    for (const auto ptr: rightedge.GetNeighbors()) {positions.push_back(ptr->GetPosition());}
-
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(2,1)));
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(3,1)));
-
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(2,2)));
-
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(2,3)));
-    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(3,3)));
-}
-
 TEST(GridTest, CreateInvalidGrid)
 {   
     EXPECT_THROW(Grid(0, 1), std::invalid_argument);
     EXPECT_THROW(Grid(1, 0), std::invalid_argument);
+}
+
+/* GetNeighbours */
+TEST(GridTest, GetNeighboursTopLeft) {
+
+    Grid g(5, 6);
+
+    Node topleft = g.GetNodeAtPosition(Position(0,0));
+
+    std::vector<Position> positions;
+    for (const auto ptr: g.GetNeighbours(topleft)) {positions.push_back(ptr->GetPosition());}
+
+    EXPECT_EQ(positions.size(), 2);
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(0, 1)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1, 0)));
+}
+
+TEST(GridTest, GetNeighboursUpperEdge) {
+    Grid g(5, 6);
+    Node upperedge = g.GetNodeAtPosition(Position(2,0));
+
+    std::vector<Position> positions;
+    for (const auto ptr: g.GetNeighbours(upperedge)) {positions.push_back(ptr->GetPosition());}
+
+    EXPECT_EQ(positions.size(), 3);
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1, 0)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(3, 0)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(2, 1)));
+}
+
+TEST(GridTest, GetNeighboursTopRight) {
+    Grid g(5, 6);
+    Node topright = g.GetNodeAtPosition(Position(5,0));
+
+    std::vector<Position> positions;
+    for (const auto ptr: g.GetNeighbours(topright)) {positions.push_back(ptr->GetPosition());}
+
+    EXPECT_EQ(positions.size(), 2);
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(4, 0)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(5, 1)));
+}
+
+TEST(GridTest, GetNeighboursRightEdge) {
+    Grid g(5, 6);
+    Node rightedge = g.GetNodeAtPosition(Position(5,2));
+
+    std::vector<Position> positions;
+    for (const auto ptr: g.GetNeighbours(rightedge)) {positions.push_back(ptr->GetPosition());}
+
+    EXPECT_EQ(positions.size(), 3);
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(4, 2)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(5, 1)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(5, 3)));
+}
+
+TEST(GridTest, GetNeighboursBottomRight) {
+    Grid g(5, 6);
+    Node bottomright = g.GetNodeAtPosition(Position(5,4));
+
+    std::vector<Position> positions;
+    for (const auto ptr: g.GetNeighbours(bottomright)) {positions.push_back(ptr->GetPosition());}
+
+    EXPECT_EQ(positions.size(), 2);
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(4, 4)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(5, 3)));
+}
+
+TEST(GridTest, GetNeighboursBottomEdge) {
+    Grid g(5, 6);
+    Node bottomedge = g.GetNodeAtPosition(Position(2,4));
+
+    std::vector<Position> positions;
+    for (const auto ptr: g.GetNeighbours(bottomedge)) {positions.push_back(ptr->GetPosition());}
+
+    EXPECT_EQ(positions.size(), 3);
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1, 4)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(3, 4)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(2, 3)));
+}
+
+TEST(GridTest, GetNeighboursBottomLeft) {
+    Grid g(5, 6);
+    Node bottomleft = g.GetNodeAtPosition(Position(0,4));
+
+    std::vector<Position> positions;
+    for (const auto ptr: g.GetNeighbours(bottomleft)) {positions.push_back(ptr->GetPosition());}
+
+    EXPECT_EQ(positions.size(), 2);
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1, 4)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(0, 3)));
+}
+
+TEST(GridTest, GetNeighboursLeftEdge) {
+    Grid g(5, 6);
+    Node leftedge = g.GetNodeAtPosition(Position(0,1));
+
+    std::vector<Position> positions;
+    for (const auto ptr: g.GetNeighbours(leftedge)) {positions.push_back(ptr->GetPosition());}
+
+    EXPECT_EQ(positions.size(), 3);
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(0, 0)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(0, 2)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1, 1)));
+}
+
+TEST(GridTest, GetNeighboursMiddle) {
+    Grid g(5, 6);
+    Node middle = g.GetNodeAtPosition(Position(1,2));
+
+    std::vector<Position> positions;
+    for (const auto ptr: g.GetNeighbours(middle)) {positions.push_back(ptr->GetPosition());}
+
+    EXPECT_EQ(positions.size(), 4);
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(0, 2)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(2, 2)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1, 1)));
+    EXPECT_TRUE(helpers::VectorContainsItem<Position>(positions, Position(1, 3)));
 }
 
 /* GetNodeAtPosition*/

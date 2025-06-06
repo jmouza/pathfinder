@@ -1,5 +1,4 @@
 add_executable(pathfinder_test
-  src/test_utils.cpp
   src/test_position.cpp
   src/test_node.cpp
   src/test_grid.cpp

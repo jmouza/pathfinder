@@ -1,7 +1,6 @@
 #include <stdexcept>
 
 #include "pathfinder/grid.h"
-#include "pathfinder/utils.h"
 
 Grid::Grid(int nr_rows, int nr_cols) {
     if (!(nr_rows > 0 && nr_cols > 0)) {
@@ -21,21 +20,9 @@ void Grid::CreateGrid() {
             nodes.push_back(std::make_shared<Node>(Position(x,y)));
         }
     }
-
-    // Link neighbors
-    for (const auto& ptr: nodes) {
-        LinkNeighbors(*ptr);
-    }
 }
 
-void Grid::LinkNeighbors(Node& node) {
-    auto neighbors_pos = GetSurroundingPositions(node.GetPosition(), nr_rows, nr_cols);
-    for (Position pos : neighbors_pos) {
-        node.AddNeighbor(&GetNodeAtPosition(pos));
-    }
-}
-
-void Grid::SetStartNode(Position pos) {
+void Grid::SetStartNode(const Position pos) {
     if (!IsPositionOnGrid(pos)) {
         throw std::invalid_argument("Position (" + std::to_string(pos.x) + "," + std::to_string(pos.y) + ") is not on the grid.");
     }
@@ -47,7 +34,7 @@ void Grid::SetStartNode(Position pos) {
     GetNodeAtPosition(start_node_position.value()).SetNodeType(NodeType::Start);
 }
 
-void Grid::SetFinishNode(Position pos) {
+void Grid::SetFinishNode(const Position pos) {
     if (!IsPositionOnGrid(pos)) {
         throw std::invalid_argument("Position (" + std::to_string(pos.x) + "," + std::to_string(pos.y) + ") is not on the grid.");
     }
@@ -59,7 +46,7 @@ void Grid::SetFinishNode(Position pos) {
     GetNodeAtPosition(finish_node_position.value()).SetNodeType(NodeType::Finish);
 }
 
-Node&Grid::GetStartNode() const {
+Node& Grid::GetStartNode() const {
     if (!start_node_position.has_value()) {
         throw std::runtime_error("Start node not set.");
     }
@@ -75,12 +62,42 @@ Node& Grid::GetFinishNode() const {
     return GetNodeAtPosition(finish_node_position.value());
 }
 
-Node& Grid::GetNodeAtPosition(Position pos) const {
+Node& Grid::GetNodeAtPosition(const Position pos) const {
+    if (!IsPositionOnGrid(pos)) {
+        throw std::invalid_argument("Position (" + std::to_string(pos.x) + "," + std::to_string(pos.y) + ") is not on the grid.");
+    }
+
+    return *GetNodePointerAtPosition(pos);
+}
+
+NodePointer Grid::GetNodePointerAtPosition(const Position pos) const {
     if (!IsPositionOnGrid(pos)) {
         throw std::invalid_argument("Position (" + std::to_string(pos.x) + "," + std::to_string(pos.y) + ") is not on the grid.");
     }
 
     int vector_index = (pos.y * nr_cols) + pos.x;
 
-    return *nodes[vector_index];
+    return nodes[vector_index];
+}
+
+VectorOfNodePointers Grid::GetNeighbours(const Node node) const {
+    Position node_position = node.GetPosition();
+
+    if (!IsPositionOnGrid(node_position)) {
+        throw std::invalid_argument("Position (" + std::to_string(node_position.x) + "," + std::to_string(node_position.y) + ") is not on the grid.");
+    }
+
+    VectorOfNodePointers neighbours;
+
+    Position north(node_position.x, node_position.y-1); 
+    Position east(node_position.x+1, node_position.y); 
+    Position south(node_position.x, node_position.y+1);
+    Position west(node_position.x-1, node_position.y);
+
+    if (IsPositionOnGrid(north)) neighbours.push_back(GetNodePointerAtPosition(north));
+    if (IsPositionOnGrid(east)) neighbours.push_back(GetNodePointerAtPosition(east));
+    if (IsPositionOnGrid(south)) neighbours.push_back(GetNodePointerAtPosition(south));
+    if (IsPositionOnGrid(west)) neighbours.push_back(GetNodePointerAtPosition(west));
+
+    return neighbours;
 }

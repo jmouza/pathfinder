@@ -5,7 +5,8 @@
 
 #include "pathfinder/node.h"
 
-using VectorOfNodePointers = std::vector<std::shared_ptr<Node>>;
+using NodePointer = std::shared_ptr<Node>;
+using VectorOfNodePointers = std::vector<NodePointer>;
 
 /* 
 Represents a 2D grid of `Node` objects, with (0, 0) being the top-left node. 
@@ -26,7 +27,7 @@ public:
     If given position is a `finish_node` it will be overriden and `finish_node` will be unset.
     @throws `std::invalid_argument` if position is not on the grid.
     */
-    void SetStartNode(Position pos);
+    void SetStartNode(const Position pos);
 
     /*
     Set `finish_node`. 
@@ -34,7 +35,7 @@ public:
     If given position is a `start_node` it will be overriden and `start_node` will be unset.
     @throws `std::invalid_argument` if position is not on the grid.
     */
-    void SetFinishNode(Position pos);
+    void SetFinishNode(const Position pos);
 
     /*
     Get the current `start_node`.
@@ -52,7 +53,14 @@ public:
     Get node at given position from the vector of nodes.
     @throws `std::invalid_argument` if position is not on the grid.
     */
-    Node& GetNodeAtPosition(Position pos) const;
+    Node& GetNodeAtPosition(const Position pos) const;
+
+    /*
+    Returns the (at most) four neighbours of the given node on the grid.
+    Neighbours that are not on the grid are not included in the output.
+    @throws `std::invalid_argument` if node's position is not on the grid.
+    */
+    VectorOfNodePointers GetNeighbours(const Node node) const;
 
     int GetNrCols() const {return nr_cols;}
     int GetNrRows() const {return nr_rows;}
@@ -66,7 +74,7 @@ private:
     std::optional<Position> finish_node_position;
     VectorOfNodePointers nodes; /* Represents the nodes in the 2D grid. */
 
-    bool IsPositionOnGrid(Position pos) const {return pos.x >= 0 && pos.y >= 0 && pos.x < nr_cols && pos.y < nr_rows;}
+    bool IsPositionOnGrid(const Position pos) const {return pos.x >= 0 && pos.y >= 0 && pos.x < nr_cols && pos.y < nr_rows;}
     void CreateGrid();
-    void LinkNeighbors(Node& node);
+    NodePointer GetNodePointerAtPosition(const Position pos) const;
 };
