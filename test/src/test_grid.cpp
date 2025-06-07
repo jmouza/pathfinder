@@ -283,3 +283,43 @@ TEST(GridTest, SetStartAndFinishNode)
     EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Start), 1);
     EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Finish), 1);
 }
+
+/* SetObstacleNode */
+TEST(GridTest, SetObstacleNodes)
+{
+    Grid g(5, 4);
+
+    g.SetObstacleNode(Position(0,0));
+    g.SetObstacleNode(Position(0,0));
+    EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Obstacle), 1);
+    EXPECT_EQ(g.GetNodeAtPosition(Position(0,0)).GetNodeType(), NodeType::Obstacle);
+
+    g.SetObstacleNode(Position(1,1));
+    EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Obstacle), 2);
+    EXPECT_EQ(g.GetNodeAtPosition(Position(0,0)).GetNodeType(), NodeType::Obstacle);
+    EXPECT_EQ(g.GetNodeAtPosition(Position(1,1)).GetNodeType(), NodeType::Obstacle);
+}
+
+TEST(GridTest, SetObstacleNodeOverridingStartNode)
+{
+    Grid g(5, 4);
+    g.SetStartNode(Position(0,0));
+    g.SetObstacleNode(Position(0,0));
+
+    EXPECT_THROW(g.GetStartNode(), std::runtime_error);
+    EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Obstacle), 1);
+    EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Start), 0);
+    EXPECT_EQ(g.GetNodeAtPosition(Position(0,0)).GetNodeType(), NodeType::Obstacle);
+}
+
+TEST(GridTest, SetObstacleNodeOverridingFinishNode)
+{
+    Grid g(5, 4);
+    g.SetFinishNode(Position(0,0));
+    g.SetObstacleNode(Position(0,0));
+
+    EXPECT_THROW(g.GetFinishNode(), std::runtime_error);
+    EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Obstacle), 1);
+    EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Finish), 0);
+    EXPECT_EQ(g.GetNodeAtPosition(Position(0,0)).GetNodeType(), NodeType::Obstacle);
+}

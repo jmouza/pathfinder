@@ -1,3 +1,5 @@
+#pragma once
+
 #include "pathfinder/grid.h"
 #include "pathfinder/result.h"
 
@@ -8,5 +10,9 @@ class Algorithm
 {
 public:
     virtual ~Algorithm() = default;
-    virtual Result Execute(Grid grid) const = 0;
+
+    /*
+    Execute the pathfinder algorithm on the given `grid`.
+    */
+    virtual const Result Execute(const Grid grid) const = 0;
 };

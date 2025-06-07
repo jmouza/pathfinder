@@ -38,6 +38,14 @@ public:
     void SetFinishNode(const Position pos);
 
     /*
+    Make node at given position an obstacle. 
+    If given node is the `start_node` or `finish_node`, it will be overriden
+    and `start_node` or `finish_node` will be unset.
+    @throws `std::invalid_argument` if position is not on the grid.
+    */
+    void SetObstacleNode(const Position pos);
+
+    /*
     Get the current `start_node`.
     @throws `std::runtime_error` if `start_node` not set.
     */

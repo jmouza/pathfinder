@@ -7,6 +7,7 @@
 #include <sstream>
 
 #include "pathfinder/grid.h"
+#include "pathfinder/result.h"
 
 namespace helpers
 {
@@ -58,6 +59,7 @@ namespace helpers
             for (auto symbol: line) {
                 if (symbol == 'S') grid.SetStartNode(Position(x,y));
                 if (symbol == 'F') grid.SetFinishNode(Position(x,y));
+                if (symbol == 'O') grid.SetObstacleNode(Position(x,y));
                 x++;
             }
 
@@ -65,5 +67,15 @@ namespace helpers
         }
 
         return grid;
+    }
+
+    static bool ResultContainsCorrectPath(Result result, std::vector<Position> path_positions) {
+        if (result.path.size() != path_positions.size()) return false;
+
+        for (int i = 0; i < result.path.size(); i++) {
+            if (result.path[i].GetPosition() != path_positions[i]) return false;
+        }
+
+        return true;
     }
 }

@@ -12,9 +12,7 @@ enum class NodeType
     Default,
     Obstacle,
     Start,
-    Finish,
-    Path,
-    Discovered
+    Finish
 };
 
 /* Represents a node in a 2D grid. */

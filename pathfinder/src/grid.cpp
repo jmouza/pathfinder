@@ -46,6 +46,17 @@ void Grid::SetFinishNode(const Position pos) {
     GetNodeAtPosition(finish_node_position.value()).SetNodeType(NodeType::Finish);
 }
 
+void Grid::SetObstacleNode(const Position pos) {
+    if (!IsPositionOnGrid(pos)) {
+        throw std::invalid_argument("Position (" + std::to_string(pos.x) + "," + std::to_string(pos.y) + ") is not on the grid.");
+    }
+
+    if (start_node_position == pos) {start_node_position.reset();}
+    if (finish_node_position == pos) {finish_node_position.reset();}
+
+    GetNodeAtPosition(pos).SetNodeType(NodeType::Obstacle);
+}
+
 Node& Grid::GetStartNode() const {
     if (!start_node_position.has_value()) {
         throw std::runtime_error("Start node not set.");
