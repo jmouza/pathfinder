@@ -3,7 +3,6 @@
 #include <cstddef>
 #include <stdexcept>
 
-/* Represents a positive position. */
 struct Position 
 {
     int x;

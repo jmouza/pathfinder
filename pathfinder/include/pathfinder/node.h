@@ -6,15 +6,6 @@
 
 #include "pathfinder/position.h"
 
-/* Represents the type of a `Node` on the grid. */
-enum class NodeType 
-{
-    Default,
-    Obstacle,
-    Start,
-    Finish
-};
-
 /* Represents a node in a 2D grid. */
 class Node
 {
@@ -23,8 +14,8 @@ public:
     bool operator== (const Node &other) const {return this->position == other.GetPosition();}
 
     Position GetPosition() const;
-    void SetNodeType(NodeType node_type_) {node_type = node_type_;}
-    NodeType GetNodeType() const {return node_type;}
+    void MakeObstacle() {is_obstacle = true;}
+    bool IsObstacle() const {return is_obstacle;}
 
     struct HashFunction
     {
@@ -39,6 +30,6 @@ public:
 
 private:
     std::optional<Position> position;
-    enum NodeType node_type = NodeType::Default;
+    bool is_obstacle = false;
 };
 

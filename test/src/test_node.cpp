@@ -15,16 +15,17 @@ TEST(NodeTest, NewNodeHasCorrectPosition)
     );
 }
 
-TEST(NodeTest, NewNodeHasDefaultType) 
+TEST(NodeTest, MakeNodeObstacle) 
 {
-    EXPECT_EQ(Node(Position(0,0)).GetNodeType(), NodeType::Default);
+    Node node = Node(Position(0,0));
+    node.MakeObstacle();
+    EXPECT_TRUE(node.IsObstacle());
 }
 
-TEST(NodeTest, OverrideNodeType) 
+TEST(NodeTest, MakeNodeObstacleTwice) 
 {
-    Node n(Position(0,0));
-    n.SetNodeType(NodeType::Start);
-    EXPECT_EQ(n.GetNodeType(), NodeType::Start);
-    n.SetNodeType(NodeType::Default);
-    EXPECT_EQ(n.GetNodeType(), NodeType::Default);
+    Node node = Node(Position(0,0));
+    node.MakeObstacle();
+    node.MakeObstacle();
+    EXPECT_TRUE(node.IsObstacle());
 }

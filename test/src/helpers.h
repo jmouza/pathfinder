@@ -1,7 +1,8 @@
 #pragma once
 
 #include <vector>
-#include <memory>
+#include <unordered_set>
+#include <queue>
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -9,36 +10,78 @@
 #include "pathfinder/grid.h"
 #include "pathfinder/result.h"
 
-namespace helpers
+namespace GridTestHelpers
 {
     template <typename T>
     /*
     Returns `true` if the vector contains the `target`, otherwise `false`.
     */
     bool VectorContainsItem(std::vector<T> vec, T target) {
-        for (auto element: vec) {
+        for (T element: vec) {
             if (element == target) return true;
         }
 
         return false;
     }
 
-    static int NumberOfNodesOfType(const std::vector<std::shared_ptr<Node>> &nodes, NodeType node_type) {
+    template <typename T>
+    bool VectorContainsAllItems(std::vector<T> vec, std::vector<T> targets) {
+        for (T target: targets) {
+            if (!VectorContainsItem<T>(vec, target)) return false;
+        }
+
+        return true;
+    }
+
+    static std::unordered_set<Node, Node::HashFunction> GetAllNodesInGrid(Grid grid) {
+        std::unordered_set<Node, Node::HashFunction> set_of_nodes;
+        std::queue<Node> queue;
+
+        grid.SetStartNode(Position(0,0));
+        queue.push(grid.GetStartNode());
+
+        while (!queue.empty()) {
+            Node node = queue.front();
+            queue.pop();
+            set_of_nodes.insert(node);
+
+            for (const Node neighour: grid.GetAdjacentNodes(node)) {
+                if (set_of_nodes.count(neighour) == 0) {
+                    queue.push(neighour);
+                }
+            }
+        }
+
+        return set_of_nodes;
+    }
+
+    static int GetNumberOfObstaclesInGrid(const Grid grid) {
         int count = 0;
 
-        for (auto &ptr: nodes) {
-            if ((*ptr).GetNodeType() == node_type) count++;
+        for (const Node node: GetAllNodesInGrid(grid)) {
+            if (node.IsObstacle()) count++;
         }
 
         return count;
     }
 
-    static void SetNumberOfLinesAndColsInFile(std::string str, int& nr_lines, int& nr_cols) {
+    static std::vector<Position> NodesToPositions(std::vector<Node> nodes) {
+        std::vector<Position> positions;
+        for (const auto node: nodes) {
+            positions.push_back(node.GetPosition());
+        }
+
+        return positions;
+    }
+}
+
+namespace PathFinderTestsHelpers {
+    static void SetNumberOfLinesAndColsInString(std::string str, int& nr_lines, int& nr_cols) {
         std::stringstream ss(str);
         std::string line;
 
         while (std::getline(ss, line)) {
-            nr_cols = line.length(); // reset every iteration...
+            nr_cols = line.length();
             nr_lines++;
         }
     }
@@ -46,9 +89,9 @@ namespace helpers
     static Grid GetGridFromString(std::string str) {
         int nr_lines = 0;
         int nr_cols = 0;
-        SetNumberOfLinesAndColsInFile(str, nr_lines, nr_cols);
+        SetNumberOfLinesAndColsInString(str, nr_lines, nr_cols);
 
-        Grid grid(nr_lines, nr_cols);
+        Grid grid(nr_cols, nr_lines);
 
         std::stringstream ss(str);
         std::string line;
