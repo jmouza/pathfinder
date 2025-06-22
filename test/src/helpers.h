@@ -8,7 +8,7 @@
 #include <sstream>
 
 #include "pathfinder/grid.h"
-#include "pathfinder/result.h"
+#include "pathfinder/pathfinder_result.h"
 
 namespace GridTestHelpers
 {
@@ -112,7 +112,7 @@ namespace PathFinderTestsHelpers {
         return grid;
     }
 
-    static bool ResultContainsCorrectPath(Result result, std::vector<Position> path_positions) {
+    static bool ResultContainsCorrectPath(PathfinderResult result, std::vector<Position> path_positions) {
         if (result.path.size() != path_positions.size()) return false;
 
         for (int i = 0; i < result.path.size(); i++) {

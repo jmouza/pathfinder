@@ -7,7 +7,7 @@
 
 using SetOfNodes = std::unordered_set<Node, Node::HashFunction>;
 
-struct Result 
+struct PathfinderResult 
 {
     bool found_path = false;
     std::vector<SetOfNodes> explored_steps; /* At each step, all explored nodes. */

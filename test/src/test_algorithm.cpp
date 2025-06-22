@@ -1,25 +1,28 @@
 #include <gtest/gtest.h>
 
-#include "pathfinder/bfs.h"
 #include "helpers.h"
 #include "sample_grids.h"
 
+using namespace PathFinderTestsHelpers;
+
 TEST(HelpersTest, SanityCheckForGridCreator)
 {
-    Grid g = helpers::GetGridFromString(HORIZONTAL_PATH);
+    Grid grid = GetGridFromString(HORIZONTAL_PATH);
 
-    EXPECT_EQ(g.GetNrCols(), 10);
-    EXPECT_EQ(g.GetNrRows(), 5);
-    EXPECT_EQ(g.GetNodes().size(), 50);
+    EXPECT_EQ(grid.GetNrCols(), 10);
+    EXPECT_EQ(grid.GetNrRows(), 5);
+    EXPECT_EQ(grid.GetNrOfNodes(), 10*5);
 
-    EXPECT_EQ(g.GetStartNode().GetPosition(), Position(0,0));
-    EXPECT_EQ(g.GetFinishNode().GetPosition(), Position(9,0));
+    EXPECT_EQ(grid.GetStartNode().GetPosition(), Position(0,0));
+    EXPECT_EQ(grid.GetFinishNode().GetPosition(), Position(9,0));
 
     for (int x = 0; x < 10; x++) {
-        EXPECT_EQ(g.GetNodeAtPosition(Position(x,1)).GetNodeType(), NodeType::Obstacle);
+        EXPECT_TRUE(grid.GetNodeAtPosition(Position(x,4)).IsObstacle());
     }
 
-    EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Start), 1);
-    EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Finish), 1);
-    EXPECT_EQ(helpers::NumberOfNodesOfType(g.GetNodes(), NodeType::Obstacle), 10);
+    for (int x = 0; x < 10; x++) {
+        for (int y = 0; y < 4; y++) {
+            EXPECT_FALSE(grid.GetNodeAtPosition(Position(x,y)).IsObstacle());
+        }
+    }
 }

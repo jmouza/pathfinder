@@ -16,10 +16,10 @@ For each grid, it also contains a vector of positions of the shortest path from 
 
 static const std::string HORIZONTAL_PATH =
     "S########F\n"
-    "OOOOOOOOOO\n"
     "##########\n"
     "##########\n"
-    "##########\n";
+    "##########\n"
+    "OOOOOOOOOO\n";
 
 static const std::vector<Position> HORIZONTAL_PATH_POSITIONS = {
     Position(0, 0),
