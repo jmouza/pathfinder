@@ -1,0 +1,152 @@
+#include <gtest/gtest.h>
+#include <memory>
+
+#include "pathfinder/breadth_first_search.h"
+#include "pathfinder/dijkstra.h"
+#include "helpers.h"
+#include "sample_grids.h"
+
+using namespace PathFinderTestsHelpers;
+
+TEST(PathFinderTestsHelpersTest, SanityCheckForGridCreator)
+{
+    Grid grid = GetGridFromString(HORIZONTAL_PATH);
+
+    EXPECT_EQ(grid.GetNrCols(), 10);
+    EXPECT_EQ(grid.GetNrRows(), 5);
+    EXPECT_EQ(grid.GetNrOfNodes(), 10*5);
+
+    EXPECT_EQ(grid.GetStartNode().GetPosition(), Position(0,0));
+    EXPECT_EQ(grid.GetFinishNode().GetPosition(), Position(9,0));
+
+    for (int x = 0; x < 10; x++) {
+        EXPECT_TRUE(grid.GetNodeAtPosition(Position(x,4)).IsObstacle());
+    }
+
+    for (int x = 0; x < 10; x++) {
+        for (int y = 0; y < 4; y++) {
+            EXPECT_FALSE(grid.GetNodeAtPosition(Position(x,y)).IsObstacle());
+        }
+    }
+}
+
+template <typename T>
+class PathfinderAlgorithmTest : public testing::Test {
+protected:
+    PathfinderAlgorithmTest(): algorithm(new T()) {};
+    ~PathfinderAlgorithmTest() override {delete algorithm;}
+    PathfinderAlgorithm* const algorithm;
+};
+
+typedef ::testing::Types<BreadthFirstSearch, Dijkstra> Implementations;
+TYPED_TEST_SUITE(PathfinderAlgorithmTest, Implementations);
+
+TYPED_TEST(PathfinderAlgorithmTest, ExecuteBFSOnHorizontalSampleGrid)
+{
+    Grid grid = GetGridFromString(HORIZONTAL_PATH);
+    
+    PathfinderResult result = this->algorithm->Execute(grid);
+
+    EXPECT_TRUE(result.found_path);
+    EXPECT_TRUE(ResultContainsCorrectPath(result, HORIZONTAL_PATH_POSITIONS));
+    EXPECT_FALSE(result.explored_steps.empty());
+}
+
+TYPED_TEST(PathfinderAlgorithmTest, ExecuteBFSOnVerticalSampleGrid)
+{
+    Grid grid = GetGridFromString(VERTICAL_PATH);
+
+    PathfinderResult result = this->algorithm->Execute(grid);
+
+    EXPECT_TRUE(result.found_path);
+    EXPECT_TRUE(ResultContainsCorrectPath(result, VERTICAL_PATH_POSITIONS));
+    EXPECT_FALSE(result.explored_steps.empty());
+}
+
+TYPED_TEST(PathfinderAlgorithmTest, ExecuteBFSOnShortPath)
+{
+    Grid grid = GetGridFromString(SHORT_PATH);
+
+    PathfinderResult result = this->algorithm->Execute(grid);
+
+    EXPECT_TRUE(result.found_path);
+    EXPECT_TRUE(ResultContainsCorrectPath(result, SHORT_PATH_POSITIONS));
+    EXPECT_FALSE(result.explored_steps.empty());
+}
+
+TYPED_TEST(PathfinderAlgorithmTest, ExecuteBFSOnImpossibleGrid1)
+{
+    Grid grid = GetGridFromString(IMPOSSIBLE_PATH1);
+
+    PathfinderResult result = this->algorithm->Execute(grid);
+
+    EXPECT_FALSE(result.found_path);
+    EXPECT_EQ(result.path.size(), 0);
+    EXPECT_FALSE(result.explored_steps.empty());
+}
+
+TYPED_TEST(PathfinderAlgorithmTest, ExecuteBFSOnImpossibleGrid2)
+{
+    Grid grid = GetGridFromString(IMPOSSIBLE_PATH2);
+
+    PathfinderResult result = this->algorithm->Execute(grid);
+
+    EXPECT_FALSE(result.found_path);
+    EXPECT_EQ(result.path.size(), 0);
+    EXPECT_FALSE(result.explored_steps.empty());
+}
+
+TYPED_TEST(PathfinderAlgorithmTest, ExecuteBFSOnImpossibleGrid3)
+{
+    Grid grid = GetGridFromString(IMPOSSIBLE_PATH3);
+
+    PathfinderResult result = this->algorithm->Execute(grid);
+
+    EXPECT_FALSE(result.found_path);
+    EXPECT_EQ(result.path.size(), 0);
+    EXPECT_FALSE(result.explored_steps.empty());
+}
+
+TYPED_TEST(PathfinderAlgorithmTest, ExecuteBFSOnPathWithObstacles1)
+{
+    Grid grid = GetGridFromString(PATH_WITH_OBSTACLES1);
+
+    PathfinderResult result = this->algorithm->Execute(grid);
+
+    EXPECT_TRUE(result.found_path);
+    EXPECT_TRUE(ResultContainsCorrectPath(result, PATH_WITH_OBSTACLES1_POSITIONS));
+    EXPECT_FALSE(result.explored_steps.empty());
+}
+
+TYPED_TEST(PathfinderAlgorithmTest, ExecuteBFSOnPathWithObstacles2)
+{
+    Grid grid = GetGridFromString(PATH_WITH_OBSTACLES2);
+
+    PathfinderResult result = this->algorithm->Execute(grid);
+
+    EXPECT_TRUE(result.found_path);
+    EXPECT_TRUE(ResultContainsCorrectPath(result, PATH_WITH_OBSTACLES2_POSITIONS));
+    EXPECT_FALSE(result.explored_steps.empty());
+}
+
+TYPED_TEST(PathfinderAlgorithmTest, ExecuteBFSOnDiagonalPath1)
+{
+    Grid grid = GetGridFromString(DIAGONAL_PATH1);
+
+    PathfinderResult result = this->algorithm->Execute(grid);
+
+    EXPECT_TRUE(result.found_path);
+    EXPECT_EQ(result.path.size(), 7); // impossible to know exact path
+    EXPECT_FALSE(result.explored_steps.empty());
+}
+
+TYPED_TEST(PathfinderAlgorithmTest, ExecuteBFSOnDiagonalPath2)
+{
+    Grid grid = GetGridFromString(DIAGONAL_PATH2);
+
+    PathfinderResult result = this->algorithm->Execute(grid);
+
+    EXPECT_TRUE(result.found_path);
+    EXPECT_TRUE(ResultContainsCorrectPath(result, DIAGONAL_PATH2_POSITIONS));
+    EXPECT_FALSE(result.explored_steps.empty());
+}

@@ -4,7 +4,7 @@
 
 #include <unordered_set>
 
-class BreadthFirstSearch : public PathfinderAlgorithm
+class Dijkstra : public PathfinderAlgorithm
 {
 public:
     const PathfinderResult Execute(Grid grid) override;

@@ -4,7 +4,7 @@
 
 #include "pathfinder/breadth_first_search.h"
 
-const PathfinderResult BreadthFirstSearch::Execute() {
+const PathfinderResult BreadthFirstSearch::Execute(Grid grid) {
     PathfinderResult result;
 
     std::queue<std::pair<Node, VectorOfNodes>> queue; /* node and path to that node */

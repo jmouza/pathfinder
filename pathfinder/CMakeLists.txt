@@ -3,6 +3,7 @@ add_library(
     src/node.cpp
     src/grid.cpp
     src/breadth_first_search.cpp
+    src/dijkstra.cpp
 )
 
 target_include_directories(pathfinder PUBLIC include)
