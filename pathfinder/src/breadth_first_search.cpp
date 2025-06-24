@@ -4,11 +4,14 @@
 
 #include "pathfinder/breadth_first_search.h"
 
-const PathfinderResult BreadthFirstSearch::Execute(Grid grid) {
+const PathfinderResult BreadthFirstSearch::Execute() {
     PathfinderResult result;
 
+    Node start_node = grid.GetStartNode();
+    Node finish_node = grid.GetFinishNode();
+
     std::queue<std::pair<Node, VectorOfNodes>> queue; /* node and path to that node */
-    queue.push({grid.GetStartNode(), {}});
+    queue.push({start_node, {}});
 
     while (!queue.empty()) {
         result.explored_steps.push_back(explored_nodes); 
@@ -22,7 +25,7 @@ const PathfinderResult BreadthFirstSearch::Execute(Grid grid) {
         VectorOfNodes path = pair.second;
         path.push_back(node);
 
-        if (node == grid.GetFinishNode()) {
+        if (node == finish_node) {
             result.found_path = true;
             result.path = path;
             return result;
