@@ -14,6 +14,16 @@ For each grid, it also contains a vector of positions of the shortest path from 
 
 #include "pathfinder/position.h"
 
+static const std::string MINI_GRID =
+    "S#F\n"
+    "###\n";
+
+static const std::vector<Position> MINI_GRID_PATH_POSITIONS = {
+    Position(0, 0),
+    Position(1, 0),
+    Position(2, 0)
+};
+
 static const std::string HORIZONTAL_PATH =
     "S########F\n"
     "##########\n"

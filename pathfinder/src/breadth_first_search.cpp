@@ -12,6 +12,7 @@ const PathfinderResult BreadthFirstSearch::Execute() {
 
     std::queue<std::pair<Node, VectorOfNodes>> queue; /* node and path to that node */
     queue.push({start_node, {}});
+    explored_nodes.insert(start_node); 
 
     while (!queue.empty()) {
         result.explored_steps.push_back(explored_nodes); 
@@ -20,7 +21,6 @@ const PathfinderResult BreadthFirstSearch::Execute() {
         queue.pop();
 
         Node node = pair.first;
-        explored_nodes.insert(node); 
 
         VectorOfNodes path = pair.second;
         path.push_back(node);
@@ -34,6 +34,7 @@ const PathfinderResult BreadthFirstSearch::Execute() {
         for (const Node adj_node: grid.GetAdjacentNodes(node)) {
             if (!IsNodeExplored(adj_node) && !IsObstacle(adj_node)) {
                 queue.push({adj_node, path});
+                explored_nodes.insert(adj_node); 
             }
         }
     }
