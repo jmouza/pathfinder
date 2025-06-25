@@ -6,7 +6,7 @@
 #include "pathfinder/grid.h"
 #include "pathfinder/pathfinder_result.h"
 
-namespace GridTestHelpers
+namespace TestHelpers
 {
     template <typename T>
     bool VectorContainsItem(std::vector<T> vec, T target) {
@@ -26,21 +26,18 @@ namespace GridTestHelpers
         return true;
     }
 
-    template <typename T>
-    bool VectorContainsAllItems(std::vector<T> vec, std::vector<T> targets);
-
-    std::unordered_set<Node, Node::HashFunction> GetAllNodesInGrid(Grid grid);
-
     int GetNumberOfObstaclesInGrid(const Grid grid);
 
     std::vector<Position> NodesToPositions(std::vector<Node> nodes);
-}
 
-namespace PathFinderTestsHelpers {
     void SetNumberOfLinesAndColsInString(std::string str, int& nr_lines, int& nr_cols);
     Grid GetGridFromString(std::string str);
+
     bool ResultContainsCorrectPath(PathfinderResult result, std::vector<Position> path_positions);
+    
     bool ExploredNodesAreIncreasing(PathfinderResult result);
     bool ExploredNodesFirstStepIsReasonable(PathfinderResult result, Node start_node);
     bool ExploredNodesLastStepIsReasonable(PathfinderResult result, Node start_node, Node finish_node);
+    bool ExploredNodesNeverContainsObstacleNode(PathfinderResult result);
+    bool ExploredStepContainsObstacleNode(SetOfNodes explored_step);
 }
