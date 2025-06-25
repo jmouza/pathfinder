@@ -2,16 +2,9 @@
 
 #include "pathfinder/grid.h"
 #include "helpers.h"
+#include "sample_grids.h"
 
-using namespace GridTestHelpers;
-
-/* Verify that the test helper function work */
-TEST(GridTestHelpersTest, AllNodesInGridHasCorrectNumber) 
-{
-    Grid grid(4, 5);
-    grid.SetStartNode(Position(0,0));
-    EXPECT_EQ(GetAllNodesInGrid(grid).size(), grid.GetNrOfNodes());
-}
+using namespace TestHelpers;
 
 /* Constructor */
 TEST(GridTest, CreateGrid)
@@ -20,7 +13,7 @@ TEST(GridTest, CreateGrid)
     EXPECT_EQ(grid.GetNrCols(), 4);
     EXPECT_EQ(grid.GetNrRows(), 5);
 
-    EXPECT_EQ(grid.GetNrOfNodes(), grid.GetNrRows() * grid.GetNrCols());
+    EXPECT_EQ(grid.GetNodes().size(), 4*5);
 }
 
 TEST(GridTest, InitiallyOnlyDefaultNodes)
@@ -125,6 +118,36 @@ TEST(GridTest, GetAdjacentNodesMiddle) {
 
     EXPECT_EQ(positions.size(), 4);
     EXPECT_TRUE(VectorContainsAllItems<Position>(positions, {Position(0,2), Position(2,2), Position(1,1), Position(1,3)}));
+}
+
+TEST(GridTest, GetAdjacentNodesWithOnlyObstaclesNeighbors) {
+    Grid grid = GetGridFromString(GRID_WITH_NODE_SURROUNDED);
+
+    EXPECT_TRUE(grid.GetAdjacentNodes(*grid.GetNodeAtPosition(Position(1,1))).empty());
+}
+
+TEST(GridTest, GetAdjacentNodesWithThreeObstaclesNeighbors) {
+    Grid grid = GetGridFromString(GRID_WITH_ONE_NEIGHBOR);
+
+    std::vector<Position> positions = NodesToPositions(grid.GetAdjacentNodes(*grid.GetNodeAtPosition(Position(1,1))));
+    EXPECT_EQ(positions.size(), 1);
+    EXPECT_TRUE(VectorContainsAllItems<Position>(positions, {Position(1,0)}));
+}
+
+TEST(GridTest, GetAdjacentNodesWithTwoObstaclesNeighbors) {
+    Grid grid = GetGridFromString(GRID_WITH_TWO_NEIGHBORS);
+
+    std::vector<Position> positions = NodesToPositions(grid.GetAdjacentNodes(*grid.GetNodeAtPosition(Position(1,1))));
+    EXPECT_EQ(positions.size(), 2);
+    EXPECT_TRUE(VectorContainsAllItems<Position>(positions, {Position(1,0), Position(2,1)}));
+}
+
+TEST(GridTest, GetAdjacentNodesWithOneObstaclesNeighbors) {
+    Grid grid = GetGridFromString(GRID_WITH_THREE_NEIGHBORS);
+
+    std::vector<Position> positions = NodesToPositions(grid.GetAdjacentNodes(*grid.GetNodeAtPosition(Position(1,1))));
+    EXPECT_EQ(positions.size(), 3);
+    EXPECT_TRUE(VectorContainsAllItems<Position>(positions, {Position(1,0), Position(2,1), Position(1,2)}));
 }
 
 /* GetNodeAtPosition*/

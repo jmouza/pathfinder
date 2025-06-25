@@ -88,10 +88,10 @@ std::vector<Node>  Grid::GetAdjacentNodes(const Node node) const {
     Position south(node_position.x, node_position.y+1);
     Position west(node_position.x-1, node_position.y);
 
-    if (IsPositionOnGrid(north)) neighbours.push_back(*GetNodeAtPosition(north));
-    if (IsPositionOnGrid(east)) neighbours.push_back(*GetNodeAtPosition(east));
-    if (IsPositionOnGrid(south)) neighbours.push_back(*GetNodeAtPosition(south));
-    if (IsPositionOnGrid(west)) neighbours.push_back(*GetNodeAtPosition(west));
+    if (IsPositionOnGrid(north) && !IsPositionAnObstacle(north)) neighbours.push_back(*GetNodeAtPosition(north));
+    if (IsPositionOnGrid(east) && !IsPositionAnObstacle(east)) neighbours.push_back(*GetNodeAtPosition(east));
+    if (IsPositionOnGrid(south) && !IsPositionAnObstacle(south)) neighbours.push_back(*GetNodeAtPosition(south));
+    if (IsPositionOnGrid(west) && !IsPositionAnObstacle(west)) neighbours.push_back(*GetNodeAtPosition(west));
 
     return neighbours;
 }

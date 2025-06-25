@@ -6,29 +6,7 @@
 #include "helpers.h"
 #include "sample_grids.h"
 
-using namespace PathFinderTestsHelpers;
-
-TEST(PathFinderTestsHelpersTest, SanityCheckForGridCreator)
-{
-    Grid grid = GetGridFromString(HORIZONTAL_PATH);
-
-    EXPECT_EQ(grid.GetNrCols(), 10);
-    EXPECT_EQ(grid.GetNrRows(), 5);
-    EXPECT_EQ(grid.GetNrOfNodes(), 10*5);
-
-    EXPECT_EQ(grid.GetStartNode().GetPosition(), Position(0,0));
-    EXPECT_EQ(grid.GetFinishNode().GetPosition(), Position(9,0));
-
-    for (int x = 0; x < 10; x++) {
-        EXPECT_TRUE(grid.GetNodeAtPosition(Position(x,4))->IsObstacle());
-    }
-
-    for (int x = 0; x < 10; x++) {
-        for (int y = 0; y < 4; y++) {
-            EXPECT_FALSE(grid.GetNodeAtPosition(Position(x,y))->IsObstacle());
-        }
-    }
-}
+using namespace TestHelpers;
 
 template <typename T>
 class PathfinderAlgorithmTest : public testing::Test {
@@ -55,8 +33,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnMiniGrid)
     EXPECT_TRUE(ExploredNodesAreIncreasing(result));
     EXPECT_TRUE(ExploredNodesFirstStepIsReasonable(result, grid.GetStartNode()));
     EXPECT_TRUE(ExploredNodesLastStepIsReasonable(result, grid.GetStartNode(), grid.GetFinishNode()));
-    EXPECT_TRUE(ExploredNodesFirstStepIsReasonable(result, grid.GetStartNode()));
-    EXPECT_TRUE(ExploredNodesLastStepIsReasonable(result, grid.GetStartNode(), grid.GetFinishNode()));
+    EXPECT_TRUE(ExploredNodesNeverContainsObstacleNode(result));
 }
 
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnHorizontalSampleGrid)
@@ -72,6 +49,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnHorizontalSampleGrid)
     EXPECT_TRUE(ExploredNodesAreIncreasing(result));
     EXPECT_TRUE(ExploredNodesFirstStepIsReasonable(result, grid.GetStartNode()));
     EXPECT_TRUE(ExploredNodesLastStepIsReasonable(result, grid.GetStartNode(), grid.GetFinishNode()));
+    EXPECT_TRUE(ExploredNodesNeverContainsObstacleNode(result));
 }
 
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnVerticalSampleGrid)
@@ -87,6 +65,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnVerticalSampleGrid)
     EXPECT_TRUE(ExploredNodesAreIncreasing(result));
     EXPECT_TRUE(ExploredNodesFirstStepIsReasonable(result, grid.GetStartNode()));
     EXPECT_TRUE(ExploredNodesLastStepIsReasonable(result, grid.GetStartNode(), grid.GetFinishNode()));
+    EXPECT_TRUE(ExploredNodesNeverContainsObstacleNode(result));
 }
 
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnShortPath)
@@ -102,6 +81,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnShortPath)
     EXPECT_TRUE(ExploredNodesAreIncreasing(result));
     EXPECT_TRUE(ExploredNodesFirstStepIsReasonable(result, grid.GetStartNode()));
     EXPECT_TRUE(ExploredNodesLastStepIsReasonable(result, grid.GetStartNode(), grid.GetFinishNode()));
+    EXPECT_TRUE(ExploredNodesNeverContainsObstacleNode(result));
 }
 
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnImpossibleGrid1)
@@ -116,6 +96,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnImpossibleGrid1)
     EXPECT_FALSE(result.explored_steps.empty());
     EXPECT_TRUE(ExploredNodesAreIncreasing(result));
     EXPECT_TRUE(ExploredNodesFirstStepIsReasonable(result, grid.GetStartNode()));
+    EXPECT_TRUE(ExploredNodesNeverContainsObstacleNode(result));
 }
 
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnImpossibleGrid2)
@@ -130,6 +111,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnImpossibleGrid2)
     EXPECT_FALSE(result.explored_steps.empty());
     EXPECT_TRUE(ExploredNodesAreIncreasing(result));
     EXPECT_TRUE(ExploredNodesFirstStepIsReasonable(result, grid.GetStartNode()));
+    EXPECT_TRUE(ExploredNodesNeverContainsObstacleNode(result));
 }
 
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnImpossibleGrid3)
@@ -144,6 +126,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnImpossibleGrid3)
     EXPECT_FALSE(result.explored_steps.empty());
     EXPECT_TRUE(ExploredNodesAreIncreasing(result));
     EXPECT_TRUE(ExploredNodesFirstStepIsReasonable(result, grid.GetStartNode()));
+    EXPECT_TRUE(ExploredNodesNeverContainsObstacleNode(result));
 }
 
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnPathWithObstacles1)
@@ -159,6 +142,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnPathWithObstacles1)
     EXPECT_TRUE(ExploredNodesAreIncreasing(result));
     EXPECT_TRUE(ExploredNodesFirstStepIsReasonable(result, grid.GetStartNode()));
     EXPECT_TRUE(ExploredNodesLastStepIsReasonable(result, grid.GetStartNode(), grid.GetFinishNode()));
+    EXPECT_TRUE(ExploredNodesNeverContainsObstacleNode(result));
 }
 
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnPathWithObstacles2)
@@ -174,6 +158,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnPathWithObstacles2)
     EXPECT_TRUE(ExploredNodesAreIncreasing(result));
     EXPECT_TRUE(ExploredNodesFirstStepIsReasonable(result, grid.GetStartNode()));
     EXPECT_TRUE(ExploredNodesLastStepIsReasonable(result, grid.GetStartNode(), grid.GetFinishNode()));
+    EXPECT_TRUE(ExploredNodesNeverContainsObstacleNode(result));
 }
 
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnDiagonalPath1)
@@ -189,6 +174,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnDiagonalPath1)
     EXPECT_TRUE(ExploredNodesAreIncreasing(result));
     EXPECT_TRUE(ExploredNodesFirstStepIsReasonable(result, grid.GetStartNode()));
     EXPECT_TRUE(ExploredNodesLastStepIsReasonable(result, grid.GetStartNode(), grid.GetFinishNode()));
+    EXPECT_TRUE(ExploredNodesNeverContainsObstacleNode(result));
 }
 
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnDiagonalPath2)
@@ -204,4 +190,37 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnDiagonalPath2)
     EXPECT_TRUE(ExploredNodesAreIncreasing(result));
     EXPECT_TRUE(ExploredNodesFirstStepIsReasonable(result, grid.GetStartNode()));
     EXPECT_TRUE(ExploredNodesLastStepIsReasonable(result, grid.GetStartNode(), grid.GetFinishNode()));
+    EXPECT_TRUE(ExploredNodesNeverContainsObstacleNode(result));
+}
+
+TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnGridWithStartPointInMiddle)
+{
+    Grid grid = GetGridFromString(START_POINT_IN_THE_MIDDLE_STRAIGHT_LINE);
+    this->SetAlgorithm(grid);
+    
+    PathfinderResult result = this->algorithm->Execute();
+
+    EXPECT_TRUE(result.found_path);
+    EXPECT_TRUE(ResultContainsCorrectPath(result, START_POINT_IN_THE_MIDDLE_STRAIGHT_LINE_POSITIONS));
+    EXPECT_FALSE(result.explored_steps.empty());
+    EXPECT_TRUE(ExploredNodesAreIncreasing(result));
+    EXPECT_TRUE(ExploredNodesFirstStepIsReasonable(result, grid.GetStartNode()));
+    EXPECT_TRUE(ExploredNodesLastStepIsReasonable(result, grid.GetStartNode(), grid.GetFinishNode()));
+    EXPECT_TRUE(ExploredNodesNeverContainsObstacleNode(result));
+}
+
+TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnGridWithStartPointInMiddleLoop)
+{
+    Grid grid = GetGridFromString(START_POINT_IN_THE_MIDDLE_LOOP);
+    this->SetAlgorithm(grid);
+    
+    PathfinderResult result = this->algorithm->Execute();
+
+    EXPECT_TRUE(result.found_path);
+    EXPECT_TRUE(ResultContainsCorrectPath(result, START_POINT_IN_THE_MIDDLE_LOOP_POSITIONS));
+    EXPECT_FALSE(result.explored_steps.empty());
+    EXPECT_TRUE(ExploredNodesAreIncreasing(result));
+    EXPECT_TRUE(ExploredNodesFirstStepIsReasonable(result, grid.GetStartNode()));
+    EXPECT_TRUE(ExploredNodesLastStepIsReasonable(result, grid.GetStartNode(), grid.GetFinishNode()));
+    EXPECT_TRUE(ExploredNodesNeverContainsObstacleNode(result));
 }

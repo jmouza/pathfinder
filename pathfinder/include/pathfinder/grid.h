@@ -48,6 +48,7 @@ public:
     Node GetFinishNode() const;
 
     /*
+    Returns non-obstacle adjacent nodes.
     @throws `std::invalid_argument` if node's position is not on the grid.
     */
     std::vector<Node> GetAdjacentNodes(const Node node) const;
@@ -64,7 +65,7 @@ public:
 
     int GetNrCols() const {return nr_cols;}
     int GetNrRows() const {return nr_rows;}
-    int GetNrOfNodes() const {return nodes.size();}
+    VectorOfNodes GetNodes() const {return nodes;}
 
 private:
     int nr_cols;
@@ -75,5 +76,6 @@ private:
     VectorOfNodes nodes; /* Represents the nodes in the 2D grid. */
 
     bool IsPositionOnGrid(const Position pos) const {return pos.x >= 0 && pos.y >= 0 && pos.x < nr_cols && pos.y < nr_rows;}
+    bool IsPositionAnObstacle(const Position pos) const {return GetNodeAtPosition(pos)->IsObstacle();}
     void CreateNodesOnGrid();
 };

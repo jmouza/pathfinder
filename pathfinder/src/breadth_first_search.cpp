@@ -32,7 +32,7 @@ const PathfinderResult BreadthFirstSearch::Execute() {
         }
 
         for (const Node adj_node: grid.GetAdjacentNodes(node)) {
-            if (!IsNodeExplored(adj_node) && !IsObstacle(adj_node)) {
+            if (!IsNodeExplored(adj_node)) {
                 queue.push({adj_node, path});
                 explored_nodes.insert(adj_node); 
             }

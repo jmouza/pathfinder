@@ -6,7 +6,7 @@ S is a start node
 F is a finish node
 O is an obstacle node
 
-For each grid, it also contains a vector of positions of the shortest path from start to finish.
+For some grids, it also contains a vector of positions of the shortest path from start to finish.
 */
 
 #include <string>
@@ -157,3 +157,81 @@ static const std::vector<Position> DIAGONAL_PATH2_POSITIONS = {
     Position(3,2), 
     Position(3,3)
 };
+
+static const std::string START_POINT_IN_THE_MIDDLE_STRAIGHT_LINE =
+    "#####\n"
+    "#####\n"
+    "##S##\n"
+    "#####\n"
+    "##F##\n";
+
+static const std::vector<Position> START_POINT_IN_THE_MIDDLE_STRAIGHT_LINE_POSITIONS = {
+    Position(2,2), 
+    Position(2,3), 
+    Position(2,4)
+};
+
+static const std::string START_POINT_IN_THE_MIDDLE_LOOP =
+    "O########FO\n"
+    "O#OOOOOOO#O\n"
+    "O#O#####O#O\n"
+    "O#O#OOO#O#O\n"
+    "O#O##SO#O#O\n"
+    "O#OOOOO#O#O\n"
+    "O#######O#O\n";
+
+static const std::vector<Position> START_POINT_IN_THE_MIDDLE_LOOP_POSITIONS = {
+    Position(5,4),
+    Position(4,4),
+    Position(3,4),
+    Position(3,3),
+    Position(3,2),
+    Position(4,2),
+    Position(5,2),
+    Position(6,2),
+    Position(7,2),
+    Position(7,3),
+    Position(7,4),
+    Position(7,5),
+    Position(7,6),
+    Position(6,6),
+    Position(5,6),
+    Position(4,6),
+    Position(3,6),
+    Position(2,6),
+    Position(1,6),
+    Position(1,5),
+    Position(1,4),
+    Position(1,3),
+    Position(1,2),
+    Position(1,1),
+    Position(1,0),
+    Position(2,0),
+    Position(3,0),
+    Position(4,0),
+    Position(5,0),
+    Position(6,0),
+    Position(7,0),
+    Position(8,0),
+    Position(9,0)
+};
+
+static const std::string GRID_WITH_ONE_NEIGHBOR =
+    "###\n"
+    "OSO\n"
+    "#OF\n";
+
+static const std::string GRID_WITH_TWO_NEIGHBORS =
+    "###\n"
+    "OS#\n"
+    "#OF\n";
+
+    static const std::string GRID_WITH_THREE_NEIGHBORS =
+    "###\n"
+    "OS#\n"
+    "##F\n";
+    
+static const std::string GRID_WITH_NODE_SURROUNDED =
+    "#O#\n"
+    "OSO\n"
+    "#OF\n";
