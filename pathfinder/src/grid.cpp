@@ -26,7 +26,7 @@ void Grid::SetStartNode(const Position pos) {
         throw std::invalid_argument("Position (" + std::to_string(pos.x) + "," + std::to_string(pos.y) + ") is not on the grid.");
     }
 
-    Node node = GetNodeAtPosition(pos);
+    Node node = *GetNodeAtPosition(pos);
 
     if (node == finish_node) {finish_node.reset();}
 
@@ -38,7 +38,7 @@ void Grid::SetFinishNode(const Position pos) {
         throw std::invalid_argument("Position (" + std::to_string(pos.x) + "," + std::to_string(pos.y) + ") is not on the grid.");
     }
 
-    Node node = GetNodeAtPosition(pos);
+    Node node = *GetNodeAtPosition(pos);
 
     if (node == start_node) {start_node.reset();}
 
@@ -88,20 +88,20 @@ std::vector<Node>  Grid::GetAdjacentNodes(const Node node) const {
     Position south(node_position.x, node_position.y+1);
     Position west(node_position.x-1, node_position.y);
 
-    if (IsPositionOnGrid(north)) neighbours.push_back(GetNodeAtPosition(north));
-    if (IsPositionOnGrid(east)) neighbours.push_back(GetNodeAtPosition(east));
-    if (IsPositionOnGrid(south)) neighbours.push_back(GetNodeAtPosition(south));
-    if (IsPositionOnGrid(west)) neighbours.push_back(GetNodeAtPosition(west));
+    if (IsPositionOnGrid(north)) neighbours.push_back(*GetNodeAtPosition(north));
+    if (IsPositionOnGrid(east)) neighbours.push_back(*GetNodeAtPosition(east));
+    if (IsPositionOnGrid(south)) neighbours.push_back(*GetNodeAtPosition(south));
+    if (IsPositionOnGrid(west)) neighbours.push_back(*GetNodeAtPosition(west));
 
     return neighbours;
 }
 
-Node Grid::GetNodeAtPosition(const Position pos) const{
+const Node* Grid::GetNodeAtPosition(const Position pos) const{
     if (!IsPositionOnGrid(pos)) {
         throw std::invalid_argument("Position (" + std::to_string(pos.x) + "," + std::to_string(pos.y) + ") is not on the grid.");
     }
 
-    return nodes.at(GetVectorIndexOfPosition(pos));
+    return &nodes.at(GetVectorIndexOfPosition(pos));
 }
 
 int Grid::GetVectorIndexOfPosition(const Position pos) const{

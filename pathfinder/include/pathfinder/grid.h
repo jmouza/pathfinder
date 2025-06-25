@@ -55,7 +55,7 @@ public:
     /*
     @throws `std::invalid_argument` if position is not on the grid.
     */
-    Node GetNodeAtPosition(const Position pos) const;
+    const Node* GetNodeAtPosition(const Position pos) const;
 
     /*
     @throws `std::invalid_argument` if position is not on the grid.

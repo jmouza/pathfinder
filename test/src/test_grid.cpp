@@ -39,7 +39,7 @@ TEST(GridTest, CreateInvalidGrid)
 TEST(GridTest, GetAdjacentNodesTopLeft) {
     Grid grid(6, 5);
 
-    Node topleft = grid.GetNodeAtPosition(Position(0,0));
+    Node topleft = *grid.GetNodeAtPosition(Position(0,0));
 
     std::vector<Position> positions = NodesToPositions(grid.GetAdjacentNodes(topleft));
 
@@ -49,7 +49,7 @@ TEST(GridTest, GetAdjacentNodesTopLeft) {
 
 TEST(GridTest, GetAdjacentNodesUpperEdge) {
     Grid grid(6, 5);
-    Node upperedge = grid.GetNodeAtPosition(Position(2,0));
+    Node upperedge = *grid.GetNodeAtPosition(Position(2,0));
 
     std::vector<Position> positions = NodesToPositions(grid.GetAdjacentNodes(upperedge));
 
@@ -59,7 +59,7 @@ TEST(GridTest, GetAdjacentNodesUpperEdge) {
 
 TEST(GridTest, GetAdjacentNodesTopRight) {
     Grid grid(6, 5);
-    Node topright = grid.GetNodeAtPosition(Position(5,0));
+    Node topright = *grid.GetNodeAtPosition(Position(5,0));
     
     std::vector<Position> positions = NodesToPositions(grid.GetAdjacentNodes(topright));
 
@@ -69,7 +69,7 @@ TEST(GridTest, GetAdjacentNodesTopRight) {
 
 TEST(GridTest, GetAdjacentNodesRightEdge) {
     Grid grid(6, 5);
-    Node rightedge = grid.GetNodeAtPosition(Position(5,2));
+    Node rightedge = *grid.GetNodeAtPosition(Position(5,2));
 
     std::vector<Position> positions = NodesToPositions(grid.GetAdjacentNodes(rightedge));
 
@@ -79,7 +79,7 @@ TEST(GridTest, GetAdjacentNodesRightEdge) {
 
 TEST(GridTest, GetAdjacentNodesBottomRight) {
     Grid grid(6, 5);
-    Node bottomright = grid.GetNodeAtPosition(Position(5,4));
+    Node bottomright = *grid.GetNodeAtPosition(Position(5,4));
 
     std::vector<Position> positions = NodesToPositions(grid.GetAdjacentNodes(bottomright));
 
@@ -89,7 +89,7 @@ TEST(GridTest, GetAdjacentNodesBottomRight) {
 
 TEST(GridTest, GetAdjacentNodesBottomEdge) {
     Grid grid(6, 5);
-    Node bottomedge = grid.GetNodeAtPosition(Position(2,4));
+    Node bottomedge = *grid.GetNodeAtPosition(Position(2,4));
 
     std::vector<Position> positions = NodesToPositions(grid.GetAdjacentNodes(bottomedge));
 
@@ -99,7 +99,7 @@ TEST(GridTest, GetAdjacentNodesBottomEdge) {
 
 TEST(GridTest, GetAdjacentNodesBottomLeft) {
     Grid grid(6, 5);
-    Node bottomleft = grid.GetNodeAtPosition(Position(0,4));
+    Node bottomleft = *grid.GetNodeAtPosition(Position(0,4));
 
     std::vector<Position> positions = NodesToPositions(grid.GetAdjacentNodes(bottomleft));
 
@@ -109,7 +109,7 @@ TEST(GridTest, GetAdjacentNodesBottomLeft) {
 
 TEST(GridTest, GetAdjacentNodesLeftEdge) {
     Grid grid(6, 5);
-    Node leftedge = grid.GetNodeAtPosition(Position(0,1));
+    Node leftedge = *grid.GetNodeAtPosition(Position(0,1));
 
     std::vector<Position> positions = NodesToPositions(grid.GetAdjacentNodes(leftedge));
 
@@ -119,7 +119,7 @@ TEST(GridTest, GetAdjacentNodesLeftEdge) {
 
 TEST(GridTest, GetAdjacentNodesMiddle) {
     Grid grid(6, 5);
-    Node middle = grid.GetNodeAtPosition(Position(1,2));
+    Node middle = *grid.GetNodeAtPosition(Position(1,2));
 
     std::vector<Position> positions = NodesToPositions(grid.GetAdjacentNodes(middle));
 
@@ -134,7 +134,7 @@ TEST(GridTest, GetNodeAtPosition)
 
     for (int y = 0; y < grid.GetNrRows(); y++) {
         for (int x = 0; x < grid.GetNrCols(); x++) {
-            const Node node = grid.GetNodeAtPosition(Position(x, y));
+            const Node node = *grid.GetNodeAtPosition(Position(x, y));
             EXPECT_EQ(node.GetPosition(), Position(x,y));
         }
     }
@@ -149,19 +149,19 @@ TEST(GridTest, GetNodeAtPositionInvalidPos)
 
 TEST(GridTest, GetNodeAtPositionTopLeft)
 {
-    Node node = Grid(5,5).GetNodeAtPosition(Position(0,0));
+    Node node = *(Grid(5,5).GetNodeAtPosition(Position(0,0)));
     EXPECT_EQ(node.GetPosition(), Position(0,0));
 }
 
 TEST(GridTest, GetNodeAtPositionLast)
 {
-    Node node = Grid(5,5).GetNodeAtPosition(Position(4,4));
+    Node node = *(Grid(5,5).GetNodeAtPosition(Position(4,4)));
     EXPECT_EQ(node.GetPosition(), Position(4,4));
 }
 
 TEST(GridTest, GetNodeAtPositionMiddle)
 {
-    Node node = Grid(5,5).GetNodeAtPosition(Position(3,2));
+    Node node = *(Grid(5,5).GetNodeAtPosition(Position(3,2)));
     EXPECT_EQ(node.GetPosition(), Position(3,2));
 }
 
@@ -262,11 +262,11 @@ TEST(GridTest, SetObstacleNodes)
 
     grid.SetObstacleNode(Position(0,0));
     EXPECT_EQ(GetNumberOfObstaclesInGrid(grid), 1);
-    EXPECT_TRUE(grid.GetNodeAtPosition(Position(0,0)).IsObstacle());
+    EXPECT_TRUE(grid.GetNodeAtPosition(Position(0,0))->IsObstacle());
 
     grid.SetObstacleNode(Position(1,1));
     EXPECT_EQ(GetNumberOfObstaclesInGrid(grid), 2);
-    EXPECT_TRUE(grid.GetNodeAtPosition(Position(1,1)).IsObstacle());
+    EXPECT_TRUE(grid.GetNodeAtPosition(Position(1,1))->IsObstacle());
 }
 
 TEST(GridTest, SetObstacleNodeDuplicateNode)
@@ -276,7 +276,7 @@ TEST(GridTest, SetObstacleNodeDuplicateNode)
     grid.SetObstacleNode(Position(0,0));
     grid.SetObstacleNode(Position(0,0));
     EXPECT_EQ(GetNumberOfObstaclesInGrid(grid), 1);
-    EXPECT_TRUE(grid.GetNodeAtPosition(Position(0,0)).IsObstacle());
+    EXPECT_TRUE(grid.GetNodeAtPosition(Position(0,0))->IsObstacle());
 }
 
 TEST(GridTest, SetObstacleNodeOverridingStartNode)
@@ -287,7 +287,7 @@ TEST(GridTest, SetObstacleNodeOverridingStartNode)
 
     EXPECT_THROW(grid.GetStartNode(), std::runtime_error);
     EXPECT_EQ(GetNumberOfObstaclesInGrid(grid), 1);
-    EXPECT_TRUE(grid.GetNodeAtPosition(Position(0,0)).IsObstacle());
+    EXPECT_TRUE(grid.GetNodeAtPosition(Position(0,0))->IsObstacle());
 }
 
 TEST(GridTest, SetObstacleNodeOverridingFinishNode)
@@ -298,5 +298,5 @@ TEST(GridTest, SetObstacleNodeOverridingFinishNode)
 
     EXPECT_THROW(grid.GetFinishNode(), std::runtime_error);
     EXPECT_EQ(GetNumberOfObstaclesInGrid(grid), 1);
-    EXPECT_TRUE(grid.GetNodeAtPosition(Position(0,0)).IsObstacle());
+    EXPECT_TRUE(grid.GetNodeAtPosition(Position(0,0))->IsObstacle());
 }
