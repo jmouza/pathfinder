@@ -1,6 +1,4 @@
-#include <queue>
 #include <vector>
-#include <utility>
 
 #include "pathfinder/breadth_first_search.h"
 
@@ -10,7 +8,6 @@ const PathfinderResult BreadthFirstSearch::Execute() {
     Node start_node = grid.GetStartNode();
     Node finish_node = grid.GetFinishNode();
 
-    std::queue<std::pair<Node, VectorOfNodes>> queue; /* node and path to that node */
     queue.push({start_node, {}});
     explored_nodes.insert(start_node); 
 
@@ -22,21 +19,16 @@ const PathfinderResult BreadthFirstSearch::Execute() {
 
         Node node = pair.first;
 
-        VectorOfNodes path = pair.second;
-        path.push_back(node);
+        VectorOfNodes path_to_node = pair.second;
+        path_to_node.push_back(node);
 
         if (node == finish_node) {
             result.found_path = true;
-            result.path = path;
+            result.path = path_to_node;
             return result;
         }
 
-        for (const Node adj_node: grid.GetAdjacentNodes(node)) {
-            if (!IsNodeExplored(adj_node)) {
-                queue.push({adj_node, path});
-                explored_nodes.insert(adj_node); 
-            }
-        }
+        HandleNeighbors(node, path_to_node);
     }
 
     return result;
@@ -44,4 +36,13 @@ const PathfinderResult BreadthFirstSearch::Execute() {
 
 bool BreadthFirstSearch::IsNodeExplored(const Node node) const {
     return (explored_nodes.count(node) != 0);
+}
+
+void BreadthFirstSearch::HandleNeighbors(Node current_node, VectorOfNodes path_to_current_node) {
+    for (const Node neighbor: grid.GetAdjacentNodes(current_node)) {
+        if (!IsNodeExplored(neighbor)) {
+            queue.push({neighbor, path_to_current_node});
+            explored_nodes.insert(neighbor); 
+        }
+    }
 }
