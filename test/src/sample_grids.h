@@ -72,11 +72,9 @@ static const std::vector<Position> SHORT_PATH_POSITIONS = {
 };
 
 static const std::string IMPOSSIBLE_PATH1 =
-    "S#O#######\n"
-    "##O#######\n"
-    "OOO#######\n"
-    "##########\n"
-    "#########F\n";
+    "S#O##\n"
+    "##O##\n"
+    "OOOF#\n";
 
 static const std::string IMPOSSIBLE_PATH2 =
     "S######O##\n"
