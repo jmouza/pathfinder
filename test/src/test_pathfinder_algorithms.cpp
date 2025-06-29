@@ -1,8 +1,7 @@
 #include <gtest/gtest.h>
 #include <memory>
 
-#include "pathfinder/breadth_first_search.h"
-#include "pathfinder/dijkstra.h"
+#include "pathfinder/pathfinder_algorithms.h"
 #include "helpers.h"
 #include "sample_grids.h"
 
