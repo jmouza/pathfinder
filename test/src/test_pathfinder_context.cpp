@@ -1,7 +1,3 @@
-// Only test that no algorithm set works well
-// invalid execution state?
-// check if the correct algorithm ran, no need to check the result, just the type?
-
 #include <gtest/gtest.h>
 #include <typeinfo>
 
@@ -11,12 +7,12 @@
 class ContextTest : public testing::Test {
 protected:
     PathfinderContext context;
-    ExecutionParameters pars{5, 5, Position(0, 0), Position(3, 3), {}};
+    ExecutionParameters parameters{5, 5, Position(0, 0), Position(3, 3), {}};
 };
 
 TEST_F(ContextTest, AlgorithmNotSetExecuteAlgorithm) 
 {
-    EXPECT_THROW(context.ExecuteAlgorithm(pars), std::runtime_error);
+    EXPECT_THROW(context.ExecuteAlgorithm(parameters), std::runtime_error);
 }
 
 TEST_F(ContextTest, AlgorithmNotSetGetInstance) 
@@ -78,4 +74,17 @@ TEST_F(ContextTest, SetSameAlgorithm)
     const char* expected = typeid(Dijkstra).name();
 
     EXPECT_EQ(algorithm_name, expected);
+}
+
+TEST_F(ContextTest, ExecuteAlgorithm)
+{
+    context.SetAlgorithm([]()
+        {return std::make_unique<Dijkstra>();
+    });
+
+    auto result = context.ExecuteAlgorithm(parameters);
+
+    EXPECT_TRUE(result.found_path);
+    EXPECT_FALSE(result.path.empty());
+    EXPECT_FALSE(result.explored_steps.empty());
 }
