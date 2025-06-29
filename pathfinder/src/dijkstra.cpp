@@ -4,8 +4,10 @@
 #include "pathfinder/dijkstra.h"
 
 const PathfinderResult Dijkstra::Execute() {
-    Node start_node = grid.GetStartNode();
-    Node finish_node = grid.GetFinishNode();
+    if (!grid) throw std::runtime_error("Grid not set!");
+
+    Node start_node = grid->GetStartNode();
+    Node finish_node = grid->GetFinishNode();
 
     PopulateUnexploredNodes();
     PopulateDistancesAndHopNodes();
@@ -36,7 +38,7 @@ const PathfinderResult Dijkstra::Execute() {
 }
 
 void Dijkstra::PopulateUnexploredNodes() {
-    for (auto node: grid.GetNodes()) {
+    for (auto node: grid->GetNodes()) {
         if (!node.IsObstacle()) unexplored_nodes.insert(node);
     }
 }
@@ -63,13 +65,13 @@ std::optional<Node> Dijkstra::GetClosestUnexploredNode() const {
 }
 
 void Dijkstra::HandleNeighbors(Node node) {
-    for (auto neighbor: grid.GetAdjacentNodes(node)) {
+    for (auto neighbor: grid->GetAdjacentNodes(node)) {
         if (NodeIsUnexplored(neighbor)) {
             double current_distance = distance_to_start_node.at(neighbor);
             double new_distance = distance_to_start_node.at(node) + 1;
             if (new_distance < current_distance) {
                 distance_to_start_node.insert_or_assign(neighbor, new_distance);
-                hop_nodes.insert_or_assign(neighbor, grid.GetNodeAtPosition(node.GetPosition()));
+                hop_nodes.insert_or_assign(neighbor, grid->GetNodeAtPosition(node.GetPosition()));
             }
         }
     }
@@ -78,7 +80,7 @@ void Dijkstra::HandleNeighbors(Node node) {
 void Dijkstra::ConstructPath() {
     std::vector<Node> sequence;
 
-    Node node = grid.GetFinishNode();
+    Node node = grid->GetFinishNode();
     const Node* hop_node = hop_nodes.at(node);
 
     while (hop_node != nullptr) {
@@ -87,7 +89,7 @@ void Dijkstra::ConstructPath() {
         node = *hop_node;
         hop_node = hop_nodes.at(node);
     }
-    sequence.push_back(grid.GetStartNode());
+    sequence.push_back(grid->GetStartNode());
     
     std::reverse(sequence.begin(), sequence.end());
 

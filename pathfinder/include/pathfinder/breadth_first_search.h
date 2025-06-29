@@ -9,7 +9,7 @@
 class BreadthFirstSearch : public PathfinderAlgorithm
 {
 public:
-    BreadthFirstSearch(Grid grid_): PathfinderAlgorithm(grid_) {};
+    BreadthFirstSearch(): PathfinderAlgorithm() {};
     const PathfinderResult Execute() override;
 
 private:

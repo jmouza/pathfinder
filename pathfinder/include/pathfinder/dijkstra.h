@@ -10,7 +10,7 @@
 class Dijkstra : public PathfinderAlgorithm
 {
 public:
-    Dijkstra(Grid grid_): PathfinderAlgorithm(grid_) {};
+    Dijkstra(): PathfinderAlgorithm() {};
     const PathfinderResult Execute() override;
 
 private:

@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <optional>
-#include <memory>
 
 #include "pathfinder/position.h"
 

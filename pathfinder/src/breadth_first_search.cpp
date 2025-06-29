@@ -3,10 +3,12 @@
 #include "pathfinder/breadth_first_search.h"
 
 const PathfinderResult BreadthFirstSearch::Execute() {
+    if (!grid) throw std::runtime_error("Grid not set!");
+
     PathfinderResult result;
 
-    Node start_node = grid.GetStartNode();
-    Node finish_node = grid.GetFinishNode();
+    Node start_node = grid->GetStartNode();
+    Node finish_node = grid->GetFinishNode();
 
     queue.push({start_node, {}});
     explored_nodes.insert(start_node); 
@@ -39,7 +41,7 @@ bool BreadthFirstSearch::IsNodeExplored(const Node node) const {
 }
 
 void BreadthFirstSearch::HandleNeighbors(Node current_node, VectorOfNodes path_to_current_node) {
-    for (const Node neighbor: grid.GetAdjacentNodes(current_node)) {
+    for (const Node neighbor: grid->GetAdjacentNodes(current_node)) {
         if (!IsNodeExplored(neighbor)) {
             queue.push({neighbor, path_to_current_node});
             explored_nodes.insert(neighbor); 

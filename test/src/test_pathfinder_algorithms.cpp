@@ -11,8 +11,8 @@ using namespace TestHelpers;
 template <typename T>
 class PathfinderAlgorithmTest : public testing::Test {
 protected:
-    PathfinderAlgorithmTest() {};
-    void SetAlgorithm(Grid grid) {algorithm = new T(grid);}
+    PathfinderAlgorithmTest(): algorithm(new T()) {};
+
     ~PathfinderAlgorithmTest() override {delete algorithm;}
     PathfinderAlgorithm* algorithm;
 };
@@ -20,10 +20,16 @@ protected:
 typedef ::testing::Types<BreadthFirstSearch, Dijkstra> Implementations;
 TYPED_TEST_SUITE(PathfinderAlgorithmTest, Implementations);
 
+TYPED_TEST(PathfinderAlgorithmTest, GridNotSet) {
+    Grid grid = GetGridFromString(MINI_GRID);
+    
+    EXPECT_THROW(this->algorithm->Execute(), std::runtime_error);
+}
+
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnMiniGrid)
 {
     Grid grid = GetGridFromString(MINI_GRID);
-    this->SetAlgorithm(grid);
+    this->algorithm->SetGrid(grid);
     
     PathfinderResult result = this->algorithm->Execute();
 
@@ -39,7 +45,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnMiniGrid)
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnHorizontalSampleGrid)
 {
     Grid grid = GetGridFromString(HORIZONTAL_PATH);
-    this->SetAlgorithm(grid);
+    this->algorithm->SetGrid(grid);
     
     PathfinderResult result = this->algorithm->Execute();
 
@@ -55,7 +61,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnHorizontalSampleGrid)
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnVerticalSampleGrid)
 {
     Grid grid = GetGridFromString(VERTICAL_PATH);
-    this->SetAlgorithm(grid);
+    this->algorithm->SetGrid(grid);
     
     PathfinderResult result = this->algorithm->Execute();
 
@@ -71,7 +77,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnVerticalSampleGrid)
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnShortPath)
 {
     Grid grid = GetGridFromString(SHORT_PATH);
-    this->SetAlgorithm(grid);
+    this->algorithm->SetGrid(grid);
     
     PathfinderResult result = this->algorithm->Execute();
 
@@ -87,7 +93,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnShortPath)
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnImpossibleGrid1)
 {
     Grid grid = GetGridFromString(IMPOSSIBLE_PATH1);
-    this->SetAlgorithm(grid);
+    this->algorithm->SetGrid(grid);
     
     PathfinderResult result = this->algorithm->Execute();
 
@@ -102,7 +108,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnImpossibleGrid1)
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnImpossibleGrid2)
 {
     Grid grid = GetGridFromString(IMPOSSIBLE_PATH2);
-    this->SetAlgorithm(grid);
+    this->algorithm->SetGrid(grid);
     
     PathfinderResult result = this->algorithm->Execute();
 
@@ -117,7 +123,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnImpossibleGrid2)
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnImpossibleGrid3)
 {
     Grid grid = GetGridFromString(IMPOSSIBLE_PATH3);
-    this->SetAlgorithm(grid);
+    this->algorithm->SetGrid(grid);
     
     PathfinderResult result = this->algorithm->Execute();
 
@@ -132,7 +138,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnImpossibleGrid3)
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnPathWithObstacles1)
 {
     Grid grid = GetGridFromString(PATH_WITH_OBSTACLES1);
-    this->SetAlgorithm(grid);
+    this->algorithm->SetGrid(grid);
     
     PathfinderResult result = this->algorithm->Execute();
 
@@ -148,7 +154,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnPathWithObstacles1)
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnPathWithObstacles2)
 {
     Grid grid = GetGridFromString(PATH_WITH_OBSTACLES2);
-    this->SetAlgorithm(grid);
+    this->algorithm->SetGrid(grid);
     
     PathfinderResult result = this->algorithm->Execute();
 
@@ -164,7 +170,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnPathWithObstacles2)
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnDiagonalPath1)
 {
     Grid grid = GetGridFromString(DIAGONAL_PATH1);
-    this->SetAlgorithm(grid);
+    this->algorithm->SetGrid(grid);
     
     PathfinderResult result = this->algorithm->Execute();
 
@@ -180,7 +186,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnDiagonalPath1)
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnDiagonalPath2)
 {
     Grid grid = GetGridFromString(DIAGONAL_PATH2);
-    this->SetAlgorithm(grid);
+    this->algorithm->SetGrid(grid);
     
     PathfinderResult result = this->algorithm->Execute();
 
@@ -196,7 +202,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnDiagonalPath2)
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnGridWithStartPointInMiddle)
 {
     Grid grid = GetGridFromString(START_POINT_IN_THE_MIDDLE_STRAIGHT_LINE);
-    this->SetAlgorithm(grid);
+    this->algorithm->SetGrid(grid);
     
     PathfinderResult result = this->algorithm->Execute();
 
@@ -212,7 +218,7 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnGridWithStartPointInMiddle)
 TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnGridWithStartPointInMiddleLoop)
 {
     Grid grid = GetGridFromString(START_POINT_IN_THE_MIDDLE_LOOP);
-    this->SetAlgorithm(grid);
+    this->algorithm->SetGrid(grid);
     
     PathfinderResult result = this->algorithm->Execute();
 
