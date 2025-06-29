@@ -20,7 +20,7 @@ const PathfinderResult Dijkstra::Execute() {
 
         unexplored_nodes.erase(closest_node.value());
         explored_nodes.insert(closest_node.value());
-        result.explored_steps.push_back(explored_nodes);
+        AddExploredPositionsToResultStep();
 
         if (closest_node == finish_node) {
             result.found_path = true;
@@ -64,6 +64,14 @@ std::optional<Node> Dijkstra::GetClosestUnexploredNode() const {
     return closest_node;
 }
 
+void Dijkstra::AddExploredPositionsToResultStep() {
+    SetOfPositions explored_positions;
+    for (auto node: explored_nodes) {
+        explored_positions.insert(node.GetPosition());
+    }
+    result.explored_steps.push_back(explored_positions);
+}
+
 void Dijkstra::HandleNeighbors(Node node) {
     for (auto neighbor: grid->GetAdjacentNodes(node)) {
         if (NodeIsUnexplored(neighbor)) {
@@ -78,18 +86,18 @@ void Dijkstra::HandleNeighbors(Node node) {
 }
 
 void Dijkstra::ConstructPath() {
-    std::vector<Node> sequence;
+    std::vector<Position> sequence;
 
     Node node = grid->GetFinishNode();
     const Node* hop_node = hop_nodes.at(node);
 
     while (hop_node != nullptr) {
-        sequence.push_back(node);
+        sequence.push_back(node.GetPosition());
 
         node = *hop_node;
         hop_node = hop_nodes.at(node);
     }
-    sequence.push_back(grid->GetStartNode());
+    sequence.push_back(grid->GetStartNode().GetPosition());
     
     std::reverse(sequence.begin(), sequence.end());
 

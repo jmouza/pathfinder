@@ -35,9 +35,9 @@ namespace TestHelpers
 
     bool ResultContainsCorrectPath(PathfinderResult result, std::vector<Position> path_positions);
     
-    bool ExploredNodesAreIncreasing(PathfinderResult result);
-    bool ExploredNodesFirstStepIsReasonable(PathfinderResult result, Node start_node);
-    bool ExploredNodesLastStepIsReasonable(PathfinderResult result, Node start_node, Node finish_node);
-    bool ExploredNodesNeverContainsObstacleNode(PathfinderResult result);
-    bool ExploredStepContainsObstacleNode(SetOfNodes explored_step);
+    bool ExploredPositionsAreIncreasing(PathfinderResult result);
+    bool ExploredPositionsFirstStepIsReasonable(PathfinderResult result, Node start_node);
+    bool ExploredPositionsLastStepIsReasonable(PathfinderResult result, Node start_node, Node finish_node);
+    bool ExploredPositionsNeverContainsObstacleNode(PathfinderResult result, Grid grid);
+    bool ExploredStepContainsObstacleNode(SetOfPositions explored_step, Grid grid);
 }

@@ -3,13 +3,14 @@
 #include <vector>
 #include <unordered_set>
 
-#include "pathfinder/node.h"
+#include "pathfinder/position.h"
 
-using SetOfNodes = std::unordered_set<Node, Node::HashFunction>;
+using SetOfPositions = std::unordered_set<Position, Position::HashFunction>;
+using VectorOfPositions = std::vector<Position>;
 
 struct PathfinderResult 
 {
     bool found_path = false;
-    std::vector<SetOfNodes> explored_steps; /* At each step, all explored nodes. */
-    std::vector<Node> path; 
+    std::vector<SetOfPositions> explored_steps; /* At each step, all explored positions. */
+    VectorOfPositions path; 
 };

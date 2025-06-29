@@ -66,49 +66,49 @@ namespace TestHelpers
         if (result.path.size() != path_positions.size()) return false;
 
         for (size_t i = 0; i < result.path.size(); i++) {
-            if (result.path[i].GetPosition() != path_positions[i]) return false;
+            if (result.path[i] != path_positions[i]) return false;
         }
 
         return true;
     }
 
-    bool ExploredNodesAreIncreasing(PathfinderResult result) {
+    bool ExploredPositionsAreIncreasing(PathfinderResult result) {
         int count = -1;
 
-        for (auto set_of_nodes: result.explored_steps) {
-            if (static_cast<int>(set_of_nodes.size()) < count) return false;
-            count = static_cast<int>(set_of_nodes.size());
+        for (auto set_of_positions: result.explored_steps) {
+            if (static_cast<int>(set_of_positions.size()) < count) return false;
+            count = static_cast<int>(set_of_positions.size());
         }
 
         return true;
     }
 
-    bool ExploredNodesFirstStepIsReasonable(PathfinderResult result, Node start_node) {
+    bool ExploredPositionsFirstStepIsReasonable(PathfinderResult result, Node start_node) {
         bool starts_with_one_node = (result.explored_steps.front().size() == 1);
-        bool starts_with_start_node = (result.explored_steps.front().count(start_node) == 1);
+        bool starts_with_start_node = (result.explored_steps.front().count(start_node.GetPosition()) == 1);
 
         return starts_with_one_node && starts_with_start_node;
     }
 
-    bool ExploredNodesLastStepIsReasonable(PathfinderResult result, Node start_node, Node finish_node) {
+    bool ExploredPositionsLastStepIsReasonable(PathfinderResult result, Node start_node, Node finish_node) {
         bool ends_with_more_than_one_node = (result.explored_steps.back().size() > 1);
-        bool last_step_contains_start_node = (result.explored_steps.back().count(start_node) == 1);
-        bool last_step_contains_finish_node = (result.explored_steps.back().count(finish_node) == 1);
+        bool last_step_contains_start_node = (result.explored_steps.back().count(start_node.GetPosition()) == 1);
+        bool last_step_contains_finish_node = (result.explored_steps.back().count(finish_node.GetPosition()) == 1);
 
         return ends_with_more_than_one_node && last_step_contains_start_node && last_step_contains_finish_node;
     }
 
-    bool ExploredNodesNeverContainsObstacleNode(PathfinderResult result) {
+    bool ExploredPositionsNeverContainsObstacleNode(PathfinderResult result, Grid grid) {
         for (auto set: result.explored_steps) {
-            if (ExploredStepContainsObstacleNode(set)) return false;
+            if (ExploredStepContainsObstacleNode(set, grid)) return false;
         }
 
         return true;
     }
 
-    bool ExploredStepContainsObstacleNode(SetOfNodes explored_step) {
-        for (auto node: explored_step) {
-            if (node.IsObstacle()) return true;
+    bool ExploredStepContainsObstacleNode(SetOfPositions explored_step, Grid grid) {
+        for (auto position: explored_step) {
+            if (grid.GetNodeAtPosition(position)->IsObstacle()) return true;
         }
 
         return false;

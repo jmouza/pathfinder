@@ -7,6 +7,8 @@
 #include <limits>
 #include <utility>
 
+using SetOfNodes = std::unordered_set<Node, Node::HashFunction>;
+
 class Dijkstra : public PathfinderAlgorithm
 {
 public:
@@ -23,6 +25,7 @@ private:
 
     void PopulateUnexploredNodes();
     void PopulateDistancesAndHopNodes();
+    void AddExploredPositionsToResultStep();
     std::optional<Node> GetClosestUnexploredNode() const;
     void HandleNeighbors(Node node);
     bool NodeIsUnexplored(Node node) const {return unexplored_nodes.count(node) != 0;}

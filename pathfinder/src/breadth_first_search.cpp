@@ -5,8 +5,6 @@
 const PathfinderResult BreadthFirstSearch::Execute() {
     if (!grid) throw std::runtime_error("Grid not set!");
 
-    PathfinderResult result;
-
     Node start_node = grid->GetStartNode();
     Node finish_node = grid->GetFinishNode();
 
@@ -14,15 +12,15 @@ const PathfinderResult BreadthFirstSearch::Execute() {
     explored_nodes.insert(start_node); 
 
     while (!queue.empty()) {
-        result.explored_steps.push_back(explored_nodes); 
+        AddExploredPositionsToResultStep();
 
         auto pair = queue.front();
         queue.pop();
 
         Node node = pair.first;
 
-        VectorOfNodes path_to_node = pair.second;
-        path_to_node.push_back(node);
+        VectorOfPositions path_to_node = pair.second;
+        path_to_node.push_back(node.GetPosition());
 
         if (node == finish_node) {
             result.found_path = true;
@@ -36,11 +34,19 @@ const PathfinderResult BreadthFirstSearch::Execute() {
     return result;
 }
 
+void BreadthFirstSearch::AddExploredPositionsToResultStep() {
+    SetOfPositions explored_positions;
+    for (auto node: explored_nodes) {
+        explored_positions.insert(node.GetPosition());
+    }
+    result.explored_steps.push_back(explored_positions);
+}
+
 bool BreadthFirstSearch::IsNodeExplored(const Node node) const {
     return (explored_nodes.count(node) != 0);
 }
 
-void BreadthFirstSearch::HandleNeighbors(Node current_node, VectorOfNodes path_to_current_node) {
+void BreadthFirstSearch::HandleNeighbors(Node current_node, VectorOfPositions path_to_current_node) {
     for (const Node neighbor: grid->GetAdjacentNodes(current_node)) {
         if (!IsNodeExplored(neighbor)) {
             queue.push({neighbor, path_to_current_node});
