@@ -13,6 +13,17 @@ else()
   add_compile_options(-Wall -Wextra -Wpedantic -Werror)
 endif()
 
+# SDL2
+find_package(SDL2 REQUIRED)
+if(NOT SDL2_FOUND)
+  message(FATAL_ERROR "SDL2 not found. Please install it (e.g., 'apt-get install libsdl2-dev' on Linux, 'brew install sdl2' on macOS, or 'pacman -S mingw-w64-i686-SDL2' on MSYS2).")
+endif()
+
+# OpenGL
+if(UNIX AND NOT APPLE)
+  find_package(OpenGL REQUIRED)
+endif()
+
 # GTest
 cmake_policy(SET CMP0135 NEW) # avoid warning about DOWNLOAD_EXTRACT_TIMESTAMP
 FetchContent_Declare(
@@ -26,6 +37,8 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-add_subdirectory(pathfinder)
-add_subdirectory(src) 
+add_subdirectory(lib/imgui)
+add_subdirectory(src/gui)
+add_subdirectory(src/pathfinder)
+add_subdirectory(src/main) 
 add_subdirectory(test)
