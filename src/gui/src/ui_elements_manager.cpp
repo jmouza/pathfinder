@@ -4,50 +4,47 @@
 
 #include <iostream>
 
-/* TODO: SHOULD NOT BE HERE */
-static const char *ALGORITHMS[] = {"Breadth-First Search", "Depth-First Search", "Dijkstra's", "A*"};
-static const char *PAUSE_BUTTON_TOOLTIP = "Pause";
-static const char *START_BUTTON_TOOLTIP = "Start";
-static const char *RESET_BUTTON_TOOLTIP = "Default Settings";
-static const char *CLEAR_BUTTON_TOOLTIP = "Clear Grid";
-static const char *PREVIOUS_BUTTON_TOOLTIP = "Previous Step";
-static const char *NEXT_BUTTON_TOOLTIP = "Next Step";
-static const char *BACKWARD_BUTTON_TOOLTIP = "To Start";
-static const char *FORWARD_BUTTON_TOOLTIP = "To End";
-static const char *COARSERGRID_BUTTON_TOOLTIP = "Coarser Grid";
-static const char *FINERGRID_BUTTON_TOOLTIP = "Finer Grid";
-static const char *HELP_BUTTON_TOOLTIP = "Help";
+void UIElementsManager::CreateUIElements(State current_state, bool start_and_finish_cell_set, bool increment_possible, bool decrement_possible, bool cell_size_increasable, bool cell_size_decreasable, int* current_speed) {
+    if (current_state == State::Running && CreateButtonAndButtonPressed(PAUSE_BUTTON_STRING.c_str(), PAUSE_BUTTON_TOOLTIP.c_str(), ButtonShouldBeEnabledInState(PAUSE_BUTTON_STRING.c_str(), current_state)))                                          
+        HandlePauseButton(); 
+    else if (CreateButtonAndButtonPressed(START_BUTTON_STRING.c_str(), START_BUTTON_TOOLTIP.c_str(), ButtonShouldBeEnabledInState(START_BUTTON_STRING.c_str(), current_state) && start_and_finish_cell_set))            
+        HandleStartButton();
 
-void UIElementsManager::CreateUIElements() {
-    if (settings->state == State::Running) {
-        if (CreateButton(PAUSE_BUTTON_STRING, PAUSE_BUTTON_TOOLTIP, ButtonShouldBeEnabled(PAUSE_BUTTON_STRING)))                                          HandlePauseButton();
-    } 
-    else {
-        if (CreateButton(
-                START_BUTTON_STRING, 
-                START_BUTTON_TOOLTIP, 
-                ButtonShouldBeEnabled(START_BUTTON_STRING) && settings->start_cell != nullptr && settings->finish_cell != nullptr))            HandleStartButton();
-    }                                            
-    if (CreateButton(CLEAR_BUTTON_STRING, CLEAR_BUTTON_TOOLTIP , ButtonShouldBeEnabled(CLEAR_BUTTON_STRING))) HandleClearButton();
-    if (CreateButton(PREVIOUS_BUTTON_STRING, PREVIOUS_BUTTON_TOOLTIP , ButtonShouldBeEnabled(PREVIOUS_BUTTON_STRING) && settings->current_step != 0)) HandlePreviousButton();
-    if (CreateButton(NEXT_BUTTON_STRING, NEXT_BUTTON_TOOLTIP , ButtonShouldBeEnabled(NEXT_BUTTON_STRING))) HandleNextButton();
-    if (CreateButton(BACKWARD_BUTTON_STRING, BACKWARD_BUTTON_TOOLTIP , ButtonShouldBeEnabled(BACKWARD_BUTTON_STRING) && settings->current_step != 0)) HandleBackwardButton();
-    if (CreateButton(FORWARD_BUTTON_STRING, FORWARD_BUTTON_TOOLTIP , ButtonShouldBeEnabled(FORWARD_BUTTON_STRING))) HandleForwardButton();
-    if (CreateButton(COARSERGRID_BUTTON_STRING, COARSERGRID_BUTTON_TOOLTIP , ButtonShouldBeEnabled(COARSERGRID_BUTTON_STRING) && settings->CellSizeIsIncreasable())) HandleCoarserGridButton();
-    if (CreateButton(FINERGRID_BUTTON_STRING, FINERGRID_BUTTON_TOOLTIP , ButtonShouldBeEnabled(FINERGRID_BUTTON_STRING) && settings->CellSizeIsDecreasable())) HandleFinerGridButton();
+    if (CreateButtonAndButtonPressed(CLEAR_BUTTON_STRING.c_str(), CLEAR_BUTTON_TOOLTIP.c_str(), ButtonShouldBeEnabledInState(CLEAR_BUTTON_STRING.c_str(), current_state))) 
+        HandleClearButton();
 
-    CreateSlider("##Speed", &settings->current_speed, MIN_SPEED, MAX_SPEED, "Speed: %d", "Speed");
+    if (CreateButtonAndButtonPressed(PREVIOUS_BUTTON_STRING.c_str(), PREVIOUS_BUTTON_TOOLTIP.c_str(), ButtonShouldBeEnabledInState(PREVIOUS_BUTTON_STRING.c_str(), current_state) && decrement_possible)) 
+        HandlePreviousButton();
+
+    if (CreateButtonAndButtonPressed(NEXT_BUTTON_STRING.c_str(), NEXT_BUTTON_TOOLTIP.c_str(), ButtonShouldBeEnabledInState(NEXT_BUTTON_STRING.c_str(), current_state) && increment_possible)) 
+        HandleNextButton();
+
+    if (CreateButtonAndButtonPressed(BACKWARD_BUTTON_STRING.c_str(), BACKWARD_BUTTON_TOOLTIP.c_str(), ButtonShouldBeEnabledInState(BACKWARD_BUTTON_STRING.c_str(), current_state) && decrement_possible)) 
+        HandleBackwardButton();
+
+    if (CreateButtonAndButtonPressed(FORWARD_BUTTON_STRING.c_str(), FORWARD_BUTTON_TOOLTIP.c_str(), ButtonShouldBeEnabledInState(FORWARD_BUTTON_STRING.c_str(), current_state) && increment_possible)) 
+        HandleForwardButton();
+
+    if (CreateButtonAndButtonPressed(COARSERGRID_BUTTON_STRING.c_str(), COARSERGRID_BUTTON_TOOLTIP .c_str(), ButtonShouldBeEnabledInState(COARSERGRID_BUTTON_STRING.c_str(), current_state) && cell_size_increasable)) 
+        HandleCoarserGridButton();
+
+    if (CreateButtonAndButtonPressed(FINERGRID_BUTTON_STRING.c_str(), FINERGRID_BUTTON_TOOLTIP .c_str(), ButtonShouldBeEnabledInState(FINERGRID_BUTTON_STRING.c_str(), current_state) && cell_size_decreasable)) 
+        HandleFinerGridButton();
+
+    CreateSlider("##Speed", current_speed, MIN_SPEED, MAX_SPEED, "Speed: %d", "Speed");
 
     CreateSelector();
 
-    if (CreateButton(RESET_BUTTON_STRING, RESET_BUTTON_TOOLTIP , ButtonShouldBeEnabled(RESET_BUTTON_STRING)))                             HandleResetButton();
-    if (CreateButton(HELP_BUTTON_STRING, HELP_BUTTON_TOOLTIP , ButtonShouldBeEnabled(HELP_BUTTON_STRING))) {
+    if (CreateButtonAndButtonPressed(RESET_BUTTON_STRING.c_str(), RESET_BUTTON_TOOLTIP.c_str(), ButtonShouldBeEnabledInState(RESET_BUTTON_STRING.c_str(), current_state)))                             
+        HandleResetButton();
+
+    if (CreateButtonAndButtonPressed(HELP_BUTTON_STRING.c_str(), HELP_BUTTON_TOOLTIP.c_str(), ButtonShouldBeEnabledInState(HELP_BUTTON_STRING.c_str(), current_state)))
         HandleHelpButton();
-    }
+    
     ShowHelpWindow();
 }
 
-bool UIElementsManager::CreateButton(const char* label, const char* tool_tip, bool enabled) const {
+bool UIElementsManager::CreateButtonAndButtonPressed(const char* label, const char* tool_tip, bool enabled) const {
     ImGui::SameLine();
 
     if (!enabled) ImGui::BeginDisabled();
@@ -85,11 +82,14 @@ void UIElementsManager::CreateSelector() const {
 
     static int item_selected_idx = 0; 
 
-    const bool enabled = (settings->state == State::Idle);
+    // const bool enabled = (settings->state == State::Idle);
+    bool enabled = true;
     if (!enabled) ImGui::BeginDisabled();
+
+    const char* ALGORITHMS[] = {"Breadth-First Search", "Dijkstra's", "A*"}; /* Bad place... */
     if (ImGui::Combo("##Algorithm", &item_selected_idx, ALGORITHMS, IM_ARRAYSIZE(ALGORITHMS)))
     {
-        HandleAlgorithmSelector(static_cast<Algorithm>(item_selected_idx));
+        // HandleAlgorithmSelector(static_cast<Algorithm>(item_selected_idx));
     }
     if (!enabled) ImGui::EndDisabled();
 
@@ -100,9 +100,9 @@ void UIElementsManager::CreateSelector() const {
     }
 }
 
-void UIElementsManager::WriteStateText() const {
+void UIElementsManager::WriteStateText(State current_state, int current_step, int max_steps) const {
     ImGui::SameLine();
-    switch (settings->state)
+    switch (current_state)
     {
     case State::Idle:
         ImGui::Text("Idle");
@@ -110,17 +110,17 @@ void UIElementsManager::WriteStateText() const {
     case State::Running:
         ImGui::Text("Running");
         ImGui::SameLine();
-        // ImGui::Text("(Step %lu/%lu)", settings->current_step+1, cells.size());
+        ImGui::Text("(Step %d/%d)", current_step, max_steps);
         break;
     case State::Paused:
         ImGui::Text("Paused");
         ImGui::SameLine();
-        // ImGui::Text("(Step %lu/%lu)", settings->current_step+1, cells.size());
+        ImGui::Text("(Step %d/%d)", current_step, max_steps);
         break;
     case State::Finished:
         ImGui::Text("Finished");
         ImGui::SameLine();
-        // ImGui::Text("(Step %lu/%lu)", settings->current_step+1, cells.size());
+        ImGui::Text("(Step %d/%d)", current_step, max_steps);
         break;
     default:
         ImGui::Text(" ");
@@ -128,75 +128,102 @@ void UIElementsManager::WriteStateText() const {
     }
 }
 
-bool UIElementsManager::ButtonShouldBeEnabled(const char* button_string) {
-    return ((ACCESS_TABLE.find(settings->state)->second.count(button_string)) != 0);
+bool UIElementsManager::ButtonShouldBeEnabledInState(const char* button_string, State current_state) const {
+    return BUTTON_ENABLED_STATES_TABLE.at(current_state).count(button_string) != 0;
 }
 
 void UIElementsManager::HandleStartButton() {
-    /* TODO: API Specific Code To Execute algorithm and fetch the result (loading screen? thread?)*/    
-    /* Check if start cell and finish cell selected*/
-    ChangeState(State::Running);
+    for (auto observer: StartButtonObservers) observer->NotifyStartButton();
+
+    /*
+    Set state to start
+    Execute algorithm
+    */
 }
 
 void UIElementsManager::HandlePauseButton() {
-    ChangeState(State::Paused);
+    for (auto observer: PauseButtonObservers) observer->NotifyPauseButton();
+
+    /*
+    Set state to pause
+    */
 }
 
 void UIElementsManager::HandleResetButton() {
-    /* TODO: API Specific Reset */    
-    HandleClearButton();
+    for (auto observer: ResetButtonObservers) observer->NotifyResetButton();
 
-    // settings = default_settings;
-    // CreateGrid();
+    /*
+    Set state to idle
+    Reset state of the algorithm
+    Reset the grid
+    Reset the settings
+    */
 }
 
 void UIElementsManager::HandleClearButton() {
-    // last_selected = nullptr;
+    for (auto observer: ClearButtonObservers) observer->NotifyClearButton();
 
-    // for (auto &cell : cells) {
-    //     cell.cell_type = CellType::Default;
-    // }
-
-    settings->start_cell = nullptr;
-    settings->finish_cell = nullptr;
-
-    settings->current_step = 0;
-
-    ChangeState(State::Idle);
+    /*
+    Set state to idle
+    Reset state of the algorithm
+    Reset the grid
+    */
 }
 
 void UIElementsManager::HandleNextButton() {
-    ChangeState(State::Paused);
-    // UpdateGrid();
+    for (auto observer: NextButtonObservers) observer->NotifyNextButton();
+
+    /*
+    Set algorithm to next step
+    Update grid
+    */
 }
 
 void UIElementsManager::HandlePreviousButton() {
-    ChangeState(State::Paused);
-    // UpdateGrid(false);
+    for (auto observer: PreviousButtonObservers) observer->NotifyPreviousButton();
+
+    /*
+    Set algorithm to previous step
+    Update grid
+    */
 }
 
 void UIElementsManager::HandleForwardButton() {
-    // settings->current_step = cells.size()-1; /* TODO: change this */
-    ChangeState(State::Finished);
+    for (auto observer: ForwardButtonObservers) observer->NotifyForwardButton();
+
+    /*
+    Set algorithm to final step
+    Update grid
+    */
 }
 
 void UIElementsManager::HandleBackwardButton() {
-    settings->current_step = 0;
-    ChangeState(State::Paused);
+    for (auto observer: BackwardButtonObservers) observer->NotifyBackwardButton();
+    
+    /*
+    Set algorithm to first step
+    Update grid
+    */ 
 }
 
 void UIElementsManager::HandleFinerGridButton() {
-    if (settings->CellSizeIsDecreasable()) {
-        settings->DecreaseCellSize();
-        // CreateGrid();
-    }
+    for (auto observer: FinerGridButtonObservers) observer->NotifyFinerGridButton();
+
+    /*
+    Decrease cell size in settings
+    Notify grid that nr_rows_cols changed
+    Recreate the grid
+    */
 }
 
 void UIElementsManager::HandleCoarserGridButton() {
-    if (settings->CellSizeIsIncreasable()) {
-        settings->IncreaseCellSize();
-        // CreateGrid();
-    }
+    for (auto observer: CoarserGridButtonObservers) observer->NotifyCoarserGridButton();
+
+    /*
+    Increase cell size in settings
+    Notify grid that nr_rows_cols changed
+    Recreate the grid
+    */
 }
 
 void UIElementsManager::HandleHelpButton() const {
@@ -214,14 +241,7 @@ void UIElementsManager::ShowHelpWindow() const {
     }
 }
 
-void UIElementsManager::HandleAlgorithmSelector(enum Algorithm selected_algorithm) const {
-    /* New API object */
-    std::cout << "Algorithm selector used: " << ALGORITHMS[static_cast<int>(selected_algorithm)] << std::endl;
-}
-
-void UIElementsManager::ChangeState(State target_state) {
-    auto possible_states = STATE_TRANSITIONS.find(settings->state)->second;
-    if (possible_states.count(target_state) != 0) {
-        settings->state = target_state;
-    }
-}
+// void UIElementsManager::HandleAlgorithmSelector(enum Algorithm selected_algorithm) const {
+//     /* New API object */
+//     // std::cout << "Algorithm selector used: " << ALGORITHMS[static_cast<int>(selected_algorithm)] << std::endl;
+// }

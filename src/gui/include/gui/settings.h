@@ -1,36 +1,26 @@
 #pragma once
 
 #include "aliases.h"
-#include "cell.h"
+#include "ui_elements_observers.h"
 
 #include <vector>
 
-enum class Algorithm {
-    BFS = 0,
-    DFS,
-    Dijkstra,
-    AStar
-};
-
-enum class State {
-    Idle,     
-    Running,
-    Paused,
-    Finished
-};
-
-struct Settings
+struct Settings:
+    public IResetButtonObserver,
+    public IFinerGridButtonObserver,
+    public ICoarserGridButtonObserver
 {
-    enum State state;
     int current_speed;
     size_t cell_sizes_index; /* Index in vector `cell_sizes`*/
-    std::vector<int> cell_sizes;
-    Cell *start_cell = nullptr;
-    Cell *finish_cell = nullptr;
-    size_t current_step = 0; /* Current step in the algorithm. */
+    std::vector<int> cell_sizes; /* List of possible cell sizes */
 
-    Settings(State state, std::vector<int> cell_sizes, int current_speed, size_t cell_sizes_index) {
-        this->state = state;
+    const std::vector<int> default_cell_sizes;
+    const int default_speed;
+    const size_t default_cell_sizes_index;
+
+    Settings(std::vector<int> cell_sizes, int current_speed, size_t cell_sizes_index): 
+        default_cell_sizes(cell_sizes), default_speed(current_speed), default_cell_sizes_index(cell_sizes_index) 
+    {
         this->cell_sizes = cell_sizes;
         this->current_speed = current_speed;
         this->cell_sizes_index = cell_sizes_index;
@@ -44,14 +34,21 @@ struct Settings
 
     int GetCurrentCellSize() const {return cell_sizes[cell_sizes_index];}
 
-    void SetDefaultSettings(State state, std::vector<int> cell_sizes, int current_speed, size_t cell_sizes_index) {
-        this->state = state;
-        this->cell_sizes = cell_sizes;
-        this->current_speed = current_speed;
-        this->cell_sizes_index = cell_sizes_index;
+    void SetDefaultSettings() {
+        this->cell_sizes = default_cell_sizes;
+        this->current_speed = default_speed;
+        this->cell_sizes_index = default_cell_sizes_index;
+    }
 
-        start_cell = nullptr;
-        finish_cell = nullptr;
-        current_step = 0;
+    void NotifyResetButton() override {
+        SetDefaultSettings();
+    }
+
+    void NotifyFinerGridButton() override {
+        DecreaseCellSize();
+    }
+
+    void NotifyCoarserGridButton() override {
+        IncreaseCellSize();
     }
 };

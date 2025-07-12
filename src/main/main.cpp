@@ -2,13 +2,15 @@
 
 int main()
 {
-    Application app;
+    std::shared_ptr<Application> app = std::make_shared<Application>();
 
-    if (app.SetUpUI() == -1) {
+    app->InitializeObservers();
+
+    if (app->SetUpUI() == -1) {
         return -1;
     }
 
-    app.RunMainLoop();
+    app->RunMainLoop();
 
     return 0;
 }

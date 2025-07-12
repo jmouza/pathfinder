@@ -1,9 +1,7 @@
 #include "gui/renderer.h"
+#include "gui/constants.h"
 
 #include <stdexcept>
-
-/* TODO: SHOULD NOT BE HERE*/
-static const char* WINDOW_NAME = "PathFinder Visualization";
 
 int Renderer::SetUpSDL() {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
@@ -26,7 +24,7 @@ int Renderer::SetUpSDL() {
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-    window = SDL_CreateWindow(WINDOW_NAME, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, window_flags);
+    window = SDL_CreateWindow(WINDOW_NAME.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, window_flags);
     SDL_SetWindowResizable(window, SDL_FALSE);
     if (window == nullptr)
     {

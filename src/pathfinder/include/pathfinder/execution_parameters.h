@@ -1,3 +1,5 @@
+#pragma once
+
 #include "pathfinder/position.h"
 
 #include <vector>

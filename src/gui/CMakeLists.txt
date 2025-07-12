@@ -1,9 +1,11 @@
 add_library(
     gui STATIC 
+    src/algorithm_manager.cpp
     src/application.cpp 
     src/event_handler.cpp 
     src/grid_manager.cpp 
     src/renderer.cpp 
+    src/state_manager.cpp
     src/ui_elements_manager.cpp 
     src/utils.cpp
 )
