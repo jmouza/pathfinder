@@ -16,8 +16,10 @@ Application::Application():
 void Application::InitializeObservers() {
     ui_elements_manager.AttachStartButtonObserver(state_manager);
     ui_elements_manager.AttachStartButtonObserver(shared_from_this());
-
+    
     ui_elements_manager.AttachPauseButtonObserver(state_manager);
+    
+    ui_elements_manager.AttachResumeButtonObserver(state_manager);
 
     ui_elements_manager.AttachResetButtonObserver(state_manager);
     ui_elements_manager.AttachResetButtonObserver(grid_manager);
@@ -39,6 +41,14 @@ void Application::InitializeObservers() {
 
     ui_elements_manager.AttachBackwardButtonObserver(algorithm_manager);
     ui_elements_manager.AttachBackwardButtonObserver(shared_from_this());
+
+    ui_elements_manager.AttachFinerGridButtonObserver(grid_manager);
+    ui_elements_manager.AttachFinerGridButtonObserver(settings);
+    ui_elements_manager.AttachFinerGridButtonObserver(shared_from_this());
+
+    ui_elements_manager.AttachCoarserGridButtonObserver(grid_manager);
+    ui_elements_manager.AttachCoarserGridButtonObserver(settings);
+    ui_elements_manager.AttachCoarserGridButtonObserver(shared_from_this());
 }
 
 int Application::SetUpUI() {
@@ -80,8 +90,8 @@ void Application::RunMainLoop() {
         ui_elements_manager.CreateUIElements(
             state_manager->GetCurrentState(),
             grid_manager->StartPositionSet() && grid_manager->FinishPositionSet(),
-            algorithm_manager->StepIsIncrementable(),
-            algorithm_manager->StepIsDecrementable(),
+            algorithm_manager->AlgorithHasBeenExecuted() ? algorithm_manager->StepIsIncrementable() : false,
+            algorithm_manager->AlgorithHasBeenExecuted() ? algorithm_manager->StepIsDecrementable() : false,
             settings->CellSizeIsIncreasable(),
             settings->CellSizeIsDecreasable(),
             &settings->current_speed
@@ -89,8 +99,7 @@ void Application::RunMainLoop() {
 
         ui_elements_manager.WriteStateText(
             state_manager->GetCurrentState(),
-            algorithm_manager->AlgorithHasBeenExecuted() ? algorithm_manager->GetCurrentStep() : 0,
-            algorithm_manager->AlgorithHasBeenExecuted() ? algorithm_manager->GetTotalNumberOfSteps() : 0
+            algorithm_manager->AlgorithHasBeenExecuted() ? algorithm_manager->PathHasBeenFound() : false
         );
 
         grid_manager->DrawGrid();
@@ -100,8 +109,12 @@ void Application::RunMainLoop() {
         renderer->Render();
         
         if (timer.TimeDurationPassed(LinearEquation(settings->current_speed, SLOPE, Y_INTERCEPT)) && state_manager->GetCurrentState() == State::Running) {
-            if (algorithm_manager->StepIsIncrementable()) algorithm_manager->IncrementStep();
             UpdateGridWithCurrentAlgorithmState();
+            if (algorithm_manager->StepIsIncrementable()) {
+                algorithm_manager->IncrementStep();
+            } else {
+                state_manager->ChangeState(State::Finished);
+            }
         }
     }
 
@@ -109,7 +122,7 @@ void Application::RunMainLoop() {
 }
 
 void Application::UpdateGridWithCurrentAlgorithmState() const {
-    grid_manager->UpdateGrid(algorithm_manager->GetExploredPositionsAtCurrentStep(), algorithm_manager->GetPath());
+    grid_manager->UpdateGrid(algorithm_manager->GetExploredPositionsAtCurrentStep(), algorithm_manager->GetPathPositionsAtCurrentStep());
 }
 
 void Application::UpdateGridWithCurrentSettings() const {

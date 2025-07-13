@@ -18,24 +18,25 @@
 static const std::string WINDOW_NAME = "PathFinder Visualization";
 
 static const int ACTION_BAR_HEIGHT = 30;
-static const int GRID_SIZE = 1000;
+static const int GRID_SIZE = 750;
 static const int WINDOW_WIDTH = GRID_SIZE;
 static const int WINDOW_HEIGHT = GRID_SIZE + ACTION_BAR_HEIGHT;
 
-static const int MIN_SPEED = 1;
-static const int MAX_SPEED = 10;
+static const int MIN_SPEED = 5;
+static const int MAX_SPEED = 15;
 static const int SLOPE = -111;
 static const int Y_INTERCEPT = 1111; 
 
-static const std::vector<int> CELL_SIZES = {20, 25, 40, 50, 100, 125};
+static const std::vector<int> CELL_SIZES = {25, 50, 75, 125, 150};
 
 static const float SLIDER_WIDTH = 100.0f;
-static const float SELECTOR_WIDTH = 200.0f;
+static const float SELECTOR_WIDTH = 175.0f;
 static const float ICON_FONT_SIZE = 20.0f;
 static const ImVec2 BUTTON_SIZE(40, 20);
 
 static const std::string PAUSE_BUTTON_STRING = ICON_FA_PAUSE;
 static const std::string START_BUTTON_STRING = ICON_FA_PLAY;
+static const std::string RESUME_BUTTON_STRING = ICON_FA_PLAY;
 static const std::string RESET_BUTTON_STRING = ICON_FA_ROTATE;
 static const std::string CLEAR_BUTTON_STRING = ICON_FA_TRASH;
 static const std::string PREVIOUS_BUTTON_STRING = ICON_FA_ANGLE_LEFT;
@@ -46,20 +47,9 @@ static const std::string COARSERGRID_BUTTON_STRING = ICON_FA_MAGNIFYING_GLASS_PL
 static const std::string FINERGRID_BUTTON_STRING = ICON_FA_MAGNIFYING_GLASS_MINUS;
 static const std::string HELP_BUTTON_STRING = ICON_FA_CIRCLE_QUESTION;
 
-// static const char *PAUSE_BUTTON_STRING = ICON_FA_PAUSE;
-// static const char *START_BUTTON_STRING = ICON_FA_PLAY;
-// static const char *RESET_BUTTON_STRING = ICON_FA_ROTATE;
-// static const char *CLEAR_BUTTON_STRING = ICON_FA_TRASH;
-// static const char *PREVIOUS_BUTTON_STRING = ICON_FA_ANGLE_LEFT;
-// static const char *NEXT_BUTTON_STRING = ICON_FA_ANGLE_RIGHT;
-// static const char *BACKWARD_BUTTON_STRING = ICON_FA_ARROW_LEFT;
-// static const char *FORWARD_BUTTON_STRING = ICON_FA_ARROW_RIGHT;
-// static const char *COARSERGRID_BUTTON_STRING = ICON_FA_MAGNIFYING_GLASS_PLUS;
-// static const char *FINERGRID_BUTTON_STRING = ICON_FA_MAGNIFYING_GLASS_MINUS;
-// static const char *HELP_BUTTON_STRING = ICON_FA_CIRCLE_QUESTION;
-
 static const std::string PAUSE_BUTTON_TOOLTIP = "Pause";
 static const std::string START_BUTTON_TOOLTIP = "Start";
+static const std::string RESUME_BUTTON_TOOLTIP = "Resume";
 static const std::string RESET_BUTTON_TOOLTIP = "Default Settings";
 static const std::string CLEAR_BUTTON_TOOLTIP = "Clear Grid";
 static const std::string PREVIOUS_BUTTON_TOOLTIP = "Previous Step";

@@ -18,13 +18,14 @@ using BUTTON_ENABLED_STATES_TYPE = std::unordered_map<State, std::unordered_set<
 static const BUTTON_ENABLED_STATES_TYPE BUTTON_ENABLED_STATES_TABLE = {
     {State::Idle, {START_BUTTON_STRING, RESET_BUTTON_STRING, CLEAR_BUTTON_STRING, FINERGRID_BUTTON_STRING, COARSERGRID_BUTTON_STRING, HELP_BUTTON_STRING}},
     {State::Running, {PAUSE_BUTTON_STRING, RESET_BUTTON_STRING, CLEAR_BUTTON_STRING, HELP_BUTTON_STRING}},
-    {State::Paused, {START_BUTTON_STRING, RESET_BUTTON_STRING, CLEAR_BUTTON_STRING, PREVIOUS_BUTTON_STRING, NEXT_BUTTON_STRING, FORWARD_BUTTON_STRING, BACKWARD_BUTTON_STRING, HELP_BUTTON_STRING}},
+    {State::Paused, {RESUME_BUTTON_STRING, RESET_BUTTON_STRING, CLEAR_BUTTON_STRING, PREVIOUS_BUTTON_STRING, NEXT_BUTTON_STRING, FORWARD_BUTTON_STRING, BACKWARD_BUTTON_STRING, HELP_BUTTON_STRING}},
     {State::Finished, {RESET_BUTTON_STRING, CLEAR_BUTTON_STRING, PREVIOUS_BUTTON_STRING, BACKWARD_BUTTON_STRING, HELP_BUTTON_STRING}}
 };
 
 class StateManager: 
     public IStartButtonObserver, 
-    public IPauseButtonObserver, 
+    public IPauseButtonObserver,
+    public IResumeButtonObserver, 
     public IResetButtonObserver,
     public IClearButtonObserver,
     public INextButtonObserver,
@@ -50,6 +51,7 @@ public:
     State GetCurrentState() const {return current_state;}
     void NotifyStartButton() override {ChangeState(State::Running);}
     void NotifyPauseButton() override {ChangeState(State::Paused);}
+    void NotifyResumeButton() override {ChangeState(State::Running);}
     void NotifyResetButton() override {ChangeState(State::Idle);}
     void NotifyClearButton() override {ChangeState(State::Idle);}
     void NotifyNextButton() override {ChangeState(State::Paused);}

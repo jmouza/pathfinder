@@ -51,7 +51,9 @@ struct Cell {
 
 class GridManager:
     public IResetButtonObserver,
-    public IClearButtonObserver
+    public IClearButtonObserver,
+    public IFinerGridButtonObserver,
+    public ICoarserGridButtonObserver
 {
 private:
 
@@ -82,7 +84,7 @@ private:
     void SetFinishCell(Cell &cell);
 public:
     void CreateCellsInGrid();
-    void UpdateGrid(SetOfPositions explored_positions, VectorOfPositions path_positions);
+    void UpdateGrid(SetOfPositions explored_positions, SetOfPositions path_positions);
     void DrawGrid() const;
     void ResetGrid();
 
@@ -100,4 +102,6 @@ public:
 
     void NotifyResetButton() override;
     void NotifyClearButton() override;
+    void NotifyFinerGridButton() override;
+    void NotifyCoarserGridButton() override;
 };

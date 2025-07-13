@@ -40,7 +40,7 @@ void GridManager::ResetGrid() {
     last_selected = nullptr;
 }
 
-void GridManager::UpdateGrid(SetOfPositions explored_positions, VectorOfPositions path_positions) {
+void GridManager::UpdateGrid(SetOfPositions explored_positions, SetOfPositions path_positions) {
     if (!nr_of_rows_and_cols) throw std::runtime_error("`nr_of_rows_and_cols` not set, call SetNumberOfRowsAndCols() first.");
 
     for (auto position: explored_positions) {
@@ -79,7 +79,7 @@ void GridManager::HandleMouseClick(MouseClickType click_type, PixelCoordinate pi
             if (cell.cell_type == CellType::Start) {start_cell = nullptr;}
             else if (cell.cell_type == CellType::Finish) {finish_cell = nullptr;}
             
-            cell.SetCellType(CellType::Obstacle);
+            cell.SetCellTypeOrFallBack(CellType::Obstacle, CellType::Default);
             last_selected = &cell;
         }
         break;
@@ -105,7 +105,7 @@ void GridManager::HandleMouseClick(MouseClickType click_type, PixelCoordinate pi
 }
 
 void GridManager::SetStartCell(Cell &cell) {
-    if (!start_cell) {
+    if (start_cell) {
         start_cell->SetCellType(CellType::Default);
     }
 
@@ -119,7 +119,7 @@ void GridManager::SetStartCell(Cell &cell) {
 }
 
 void GridManager::SetFinishCell(Cell &cell) {
-    if (!finish_cell) {
+    if (finish_cell) {
         finish_cell->SetCellType(CellType::Default);
     }
     finish_cell = &cell;
@@ -183,5 +183,13 @@ void GridManager::NotifyResetButton() {
 }
 
 void GridManager::NotifyClearButton() {
+    ResetGrid();
+}
+
+void GridManager::NotifyFinerGridButton() {
+    ResetGrid();
+}
+
+void GridManager::NotifyCoarserGridButton() {
     ResetGrid();
 }

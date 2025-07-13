@@ -14,6 +14,13 @@ public:
     virtual void NotifyPauseButton() = 0;
 };
 
+class IResumeButtonObserver
+{
+public:
+    virtual ~IResumeButtonObserver() {};
+    virtual void NotifyResumeButton() = 0;
+};
+
 class IResetButtonObserver
 {
 public:

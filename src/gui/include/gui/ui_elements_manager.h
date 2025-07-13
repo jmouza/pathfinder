@@ -9,6 +9,7 @@ class UIElementsManager
 private:
     std::vector<std::shared_ptr<IStartButtonObserver>> StartButtonObservers;
     std::vector<std::shared_ptr<IPauseButtonObserver>> PauseButtonObservers;
+    std::vector<std::shared_ptr<IResumeButtonObserver>> ResumeButtonObservers;
     std::vector<std::shared_ptr<IResetButtonObserver>> ResetButtonObservers;
     std::vector<std::shared_ptr<IClearButtonObserver>> ClearButtonObservers;
     std::vector<std::shared_ptr<INextButtonObserver>> NextButtonObservers;
@@ -25,6 +26,7 @@ private:
 
     void HandleStartButton();
     void HandlePauseButton();
+    void HandleResumeButton();
     void HandleResetButton();
     void HandleClearButton();
     void HandleNextButton();
@@ -39,9 +41,10 @@ private:
     void ShowHelpWindow() const;
 public:
     void CreateUIElements(State current_state, bool start_and_finish_cell_set, bool increment_possible, bool decrement_possible, bool cell_size_increasable, bool cell_size_decreasable, int* current_speed);
-    void WriteStateText(State current_state, int current_step, int max_steps) const;
+    void WriteStateText(State current_state, bool path_found) const;
     void AttachStartButtonObserver(std::shared_ptr<IStartButtonObserver> observer) {StartButtonObservers.push_back(observer);}
     void AttachPauseButtonObserver(std::shared_ptr<IPauseButtonObserver> observer) {PauseButtonObservers.push_back(observer);}
+    void AttachResumeButtonObserver(std::shared_ptr<IResumeButtonObserver> observer) {ResumeButtonObservers.push_back(observer);}
     void AttachResetButtonObserver(std::shared_ptr<IResetButtonObserver> observer) {ResetButtonObservers.push_back(observer);}
     void AttachClearButtonObserver(std::shared_ptr<IClearButtonObserver> observer) {ClearButtonObservers.push_back(observer);}
     void AttachNextButtonObserver(std::shared_ptr<INextButtonObserver> observer) {NextButtonObservers.push_back(observer);}

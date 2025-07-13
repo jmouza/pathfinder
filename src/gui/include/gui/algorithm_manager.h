@@ -29,9 +29,14 @@ private:
 
     PathfinderContext context;
     std::optional<int> current_step;
-    std::optional<PathfinderResult> result;
-    std::optional<Algorithm> algorithm_type = Algorithm::BFS;
+    int explored_positions_index = 0;
+    int path_positions_index = -1;
 
+    std::optional<PathfinderResult> result;
+    std::optional<Algorithm> algorithm_type = DEFAULT_ALGORITHM;
+
+    int GetTotalNumberOfExplorationSteps() const;
+    int GetTotalNumberOfPathPositions() const;
 public:
     bool AlgorithHasBeenExecuted() const {return result.has_value();}
     void SetAlgorithmType(Algorithm algorithm_type) {this->algorithm_type = algorithm_type;}
@@ -48,6 +53,7 @@ public:
     void SetStepToLast();
 
     SetOfPositions GetExploredPositionsAtCurrentStep() const;
+    SetOfPositions GetPathPositionsAtCurrentStep() const;
     bool PathHasBeenFound() const;
     VectorOfPositions GetPath() const;
 
