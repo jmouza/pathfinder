@@ -64,7 +64,6 @@ static const PixelCoordinate START_POS_RECTS(0, ACTION_BAR_HEIGHT); /* Top left 
 
 static const ImU32 BLACK = ImColor(ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
 static const ImU32 WHITE = ImColor(ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
-// static const ImU32 GRAY = ImColor(ImVec4(0.4f, 0.4f, 0.4f, 1.0f));
 static const ImU32 DARKGRAY = ImColor(ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
 static const ImU32 GRAY = ImColor(ImVec4(0.95f, 0.95f, 0.95f, 1.0f));
 static const ImU32 BLUE = ImColor(ImVec4(0.0f, 0.0f, 1.0f, 1.0f));

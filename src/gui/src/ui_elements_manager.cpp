@@ -2,8 +2,6 @@
 #include "gui/constants.h"
 #include "imgui.h"
 
-#include <iostream>
-
 void UIElementsManager::CreateUIElements(State current_state, bool start_and_finish_cell_set, bool increment_possible, bool decrement_possible, bool cell_size_increasable, bool cell_size_decreasable, int* current_speed) {
     if (current_state == State::Running) {
         if (CreateButtonAndButtonPressed(PAUSE_BUTTON_STRING.c_str(), PAUSE_BUTTON_TOOLTIP.c_str(), ButtonShouldBeEnabledInState(PAUSE_BUTTON_STRING.c_str(), current_state))) {
@@ -42,7 +40,7 @@ void UIElementsManager::CreateUIElements(State current_state, bool start_and_fin
 
     CreateSlider("##Speed", current_speed, MIN_SPEED, MAX_SPEED, "Speed: %d", "Speed");
 
-    CreateSelector();
+    CreateSelector(current_state == State::Idle);
 
     // if (CreateButtonAndButtonPressed(RESET_BUTTON_STRING.c_str(), RESET_BUTTON_TOOLTIP.c_str(), ButtonShouldBeEnabledInState(RESET_BUTTON_STRING.c_str(), current_state)))                             
     //     HandleResetButton();
@@ -85,20 +83,18 @@ void UIElementsManager::CreateSlider(const char* label, int *val, int min, int m
     }
 }
 
-void UIElementsManager::CreateSelector() const {
+void UIElementsManager::CreateSelector(bool enabled) const {
     ImGui::SameLine();
     ImGui::SetNextItemWidth(SELECTOR_WIDTH);
 
     static int item_selected_idx = 0; 
 
-    // const bool enabled = (settings->state == State::Idle);
-    bool enabled = true;
     if (!enabled) ImGui::BeginDisabled();
 
     const char* ALGORITHMS[] = {"Breadth-First Search", "Dijkstra's", "A*"}; /* Bad place... */
     if (ImGui::Combo("##Algorithm", &item_selected_idx, ALGORITHMS, IM_ARRAYSIZE(ALGORITHMS)))
     {
-        // HandleAlgorithmSelector(static_cast<Algorithm>(item_selected_idx));
+        HandleAlgorithmSelector(ALGORITHMS[item_selected_idx]);
     }
     if (!enabled) ImGui::EndDisabled();
 
@@ -109,12 +105,15 @@ void UIElementsManager::CreateSelector() const {
     }
 }
 
-void UIElementsManager::WriteStateText(State current_state, bool path_found) const {
+void UIElementsManager::WriteStateText(State current_state, bool is_startable, bool path_found) const {
     ImGui::SameLine();
     switch (current_state)
     {
     case State::Idle:
-        ImGui::Text("Create a Grid!");
+        if (!is_startable) 
+            ImGui::Text("Create a Grid");
+        else
+            ImGui::Text("Run Algorithm");    
         break;
     case State::Running:
         ImGui::Text("Searching...");
@@ -255,7 +254,6 @@ void UIElementsManager::ShowHelpWindow() const {
     }
 }
 
-// void UIElementsManager::HandleAlgorithmSelector(enum Algorithm selected_algorithm) const {
-//     /* New API object */
-//     // std::cout << "Algorithm selector used: " << ALGORITHMS[static_cast<int>(selected_algorithm)] << std::endl;
-// }
+void UIElementsManager::HandleAlgorithmSelector(const char* selected_algorithm) const {
+    for (auto observer: AlgorithmSelectorObservers) observer->NotifyAlgorithmSelector(selected_algorithm);
+}

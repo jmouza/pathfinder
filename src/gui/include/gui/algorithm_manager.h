@@ -22,7 +22,8 @@ class AlgorithmManager:
     public INextButtonObserver,
     public IPreviousButtonObserver,
     public IForwardButtonObserver,
-    public IBackwardButtonObserver
+    public IBackwardButtonObserver,
+    public IAlgorithmSelectorObserver
 {
 private:
     const Algorithm DEFAULT_ALGORITHM = Algorithm::BFS;
@@ -37,9 +38,9 @@ private:
 
     int GetTotalNumberOfExplorationSteps() const;
     int GetTotalNumberOfPathPositions() const;
+    void SetAlgorithmType(Algorithm algorithm_type) {this->algorithm_type = algorithm_type;}
 public:
     bool AlgorithHasBeenExecuted() const {return result.has_value();}
-    void SetAlgorithmType(Algorithm algorithm_type) {this->algorithm_type = algorithm_type;}
     void RunAlgorithm(int nr_of_rows_and_cols, Position start_position, Position finish_position, std::vector<Position> obstacle_positions);
     void ResetState();
 
@@ -63,4 +64,5 @@ public:
     void NotifyPreviousButton() override;
     void NotifyForwardButton() override;
     void NotifyBackwardButton() override;
+    void NotifyAlgorithmSelector(std::string selected_algorithm) override;
 };

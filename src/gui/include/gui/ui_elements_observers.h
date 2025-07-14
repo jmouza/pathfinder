@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 class IStartButtonObserver
 {
 public:
@@ -75,4 +77,11 @@ class ICoarserGridButtonObserver
 public:
     virtual ~ICoarserGridButtonObserver() {};
     virtual void NotifyCoarserGridButton() = 0;
+};
+
+class IAlgorithmSelectorObserver
+{
+public:
+    virtual ~IAlgorithmSelectorObserver() {};
+    virtual void NotifyAlgorithmSelector(std::string selected_algorithm) = 0;
 };

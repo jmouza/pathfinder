@@ -49,6 +49,8 @@ void Application::InitializeObservers() {
     ui_elements_manager.AttachCoarserGridButtonObserver(grid_manager);
     ui_elements_manager.AttachCoarserGridButtonObserver(settings);
     ui_elements_manager.AttachCoarserGridButtonObserver(shared_from_this());
+
+    ui_elements_manager.AttachAlgorithmSelectorObserver(algorithm_manager);
 }
 
 int Application::SetUpUI() {
@@ -99,6 +101,7 @@ void Application::RunMainLoop() {
 
         ui_elements_manager.WriteStateText(
             state_manager->GetCurrentState(),
+            grid_manager->StartPositionSet() && grid_manager->FinishPositionSet(),
             algorithm_manager->AlgorithHasBeenExecuted() ? algorithm_manager->PathHasBeenFound() : false
         );
 

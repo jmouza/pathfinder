@@ -30,7 +30,7 @@ void AlgorithmManager::RunAlgorithm(int nr_of_rows_and_cols, Position start_posi
         break;
     case Algorithm::AStar:
         // context.SetAlgorithm([]()
-        //     {return std::make_unique<BreadthFirstSearch>();
+        //     {return std::make_unique<AStar>();
         // });
         break;
     default:
@@ -46,7 +46,6 @@ void AlgorithmManager::ResetState() {
     explored_positions_index = 0;
     path_positions_index = -1;
     result.reset();
-    algorithm_type = DEFAULT_ALGORITHM;
 }
 
 int AlgorithmManager::GetTotalNumberOfSteps() const {
@@ -180,4 +179,14 @@ void AlgorithmManager::NotifyForwardButton() {
 
 void AlgorithmManager::NotifyBackwardButton() {
     SetStepToZero();
+}
+
+void AlgorithmManager::NotifyAlgorithmSelector(std::string selected_algorithm) {
+    if (selected_algorithm == "Breadth-First Search") {
+        SetAlgorithmType(Algorithm::BFS);
+    } else if (selected_algorithm == "Dijkstra's") {
+        SetAlgorithmType(Algorithm::Dijkstra);
+    } else if (selected_algorithm == "A*") {
+        SetAlgorithmType(Algorithm::AStar);
+    }
 }
