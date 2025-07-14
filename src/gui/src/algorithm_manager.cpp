@@ -165,22 +165,6 @@ void AlgorithmManager::NotifyClearButton() {
     ResetState();
 }
 
-void AlgorithmManager::NotifyNextButton() {
-    IncrementStep();
-}
-
-void AlgorithmManager::NotifyPreviousButton() {
-    DecrementStep();
-}
-
-void AlgorithmManager::NotifyForwardButton() {
-    SetStepToLast();
-}
-
-void AlgorithmManager::NotifyBackwardButton() {
-    SetStepToZero();
-}
-
 void AlgorithmManager::NotifyAlgorithmSelector(std::string selected_algorithm) {
     if (selected_algorithm == "Breadth-First Search") {
         SetAlgorithmType(Algorithm::BFS);

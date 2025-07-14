@@ -25,10 +25,6 @@
 class Application:
     public std::enable_shared_from_this<Application>,
     public IStartButtonObserver,
-    public INextButtonObserver,
-    public IPreviousButtonObserver,
-    public IForwardButtonObserver,
-    public IBackwardButtonObserver,
     public IFinerGridButtonObserver,
     public ICoarserGridButtonObserver
 {    
@@ -54,10 +50,6 @@ public:
     void RunMainLoop();
 
     void NotifyStartButton() override;
-    void NotifyNextButton() override;
-    void NotifyPreviousButton() override;
-    void NotifyForwardButton() override;
-    void NotifyBackwardButton() override;
     void NotifyFinerGridButton() override;
     void NotifyCoarserGridButton() override;
 };

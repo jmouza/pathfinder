@@ -22,25 +22,12 @@ void Application::InitializeObservers() {
     ui_elements_manager.AttachResumeButtonObserver(state_manager);
 
     ui_elements_manager.AttachResetButtonObserver(state_manager);
-    ui_elements_manager.AttachResetButtonObserver(grid_manager);
     ui_elements_manager.AttachResetButtonObserver(algorithm_manager);
-    ui_elements_manager.AttachResetButtonObserver(settings);
+    ui_elements_manager.AttachResetButtonObserver(grid_manager);
 
     ui_elements_manager.AttachClearButtonObserver(state_manager);
     ui_elements_manager.AttachClearButtonObserver(grid_manager);
     ui_elements_manager.AttachClearButtonObserver(algorithm_manager);
-
-    ui_elements_manager.AttachNextButtonObserver(algorithm_manager);
-    ui_elements_manager.AttachNextButtonObserver(shared_from_this());
-
-    ui_elements_manager.AttachPreviousButtonObserver(algorithm_manager);
-    ui_elements_manager.AttachPreviousButtonObserver(shared_from_this());
-
-    ui_elements_manager.AttachForwardButtonObserver(algorithm_manager);
-    ui_elements_manager.AttachForwardButtonObserver(shared_from_this());
-
-    ui_elements_manager.AttachBackwardButtonObserver(algorithm_manager);
-    ui_elements_manager.AttachBackwardButtonObserver(shared_from_this());
 
     ui_elements_manager.AttachFinerGridButtonObserver(grid_manager);
     ui_elements_manager.AttachFinerGridButtonObserver(settings);
@@ -92,8 +79,6 @@ void Application::RunMainLoop() {
         ui_elements_manager.CreateUIElements(
             state_manager->GetCurrentState(),
             grid_manager->StartPositionSet() && grid_manager->FinishPositionSet(),
-            algorithm_manager->AlgorithHasBeenExecuted() ? algorithm_manager->StepIsIncrementable() : false,
-            algorithm_manager->AlgorithHasBeenExecuted() ? algorithm_manager->StepIsDecrementable() : false,
             settings->CellSizeIsIncreasable(),
             settings->CellSizeIsDecreasable(),
             &settings->current_speed
@@ -141,22 +126,6 @@ void Application::NotifyStartButton() {
         grid_manager->GetFinishPosition(),
         grid_manager->GetObstaclesPositions()
     );
-}
-
-void Application::NotifyNextButton() {
-    UpdateGridWithCurrentAlgorithmState();
-}
-
-void Application::NotifyPreviousButton() {
-    UpdateGridWithCurrentAlgorithmState();
-}
-
-void Application::NotifyForwardButton() {
-    UpdateGridWithCurrentAlgorithmState();
-}
-
-void Application::NotifyBackwardButton() {
-    UpdateGridWithCurrentAlgorithmState();
 }
 
 void Application::NotifyFinerGridButton() {

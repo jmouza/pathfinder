@@ -19,10 +19,6 @@ enum class Algorithm {
 class AlgorithmManager:
     public IResetButtonObserver,
     public IClearButtonObserver,
-    public INextButtonObserver,
-    public IPreviousButtonObserver,
-    public IForwardButtonObserver,
-    public IBackwardButtonObserver,
     public IAlgorithmSelectorObserver
 {
 private:
@@ -60,9 +56,5 @@ public:
 
     void NotifyResetButton() override;
     void NotifyClearButton() override;
-    void NotifyNextButton() override;
-    void NotifyPreviousButton() override;
-    void NotifyForwardButton() override;
-    void NotifyBackwardButton() override;
     void NotifyAlgorithmSelector(std::string selected_algorithm) override;
 };

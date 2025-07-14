@@ -2,7 +2,7 @@
 #include "gui/constants.h"
 #include "imgui.h"
 
-void UIElementsManager::CreateUIElements(State current_state, bool start_and_finish_cell_set, bool increment_possible, bool decrement_possible, bool cell_size_increasable, bool cell_size_decreasable, int* current_speed) {
+void UIElementsManager::CreateUIElements(State current_state, bool start_and_finish_cell_set, bool cell_size_increasable, bool cell_size_decreasable, int* current_speed) {
     if (current_state == State::Running) {
         if (CreateButtonAndButtonPressed(PAUSE_BUTTON_STRING.c_str(), PAUSE_BUTTON_TOOLTIP.c_str(), ButtonShouldBeEnabledInState(PAUSE_BUTTON_STRING.c_str(), current_state))) {
             HandlePauseButton(); 
@@ -20,17 +20,8 @@ void UIElementsManager::CreateUIElements(State current_state, bool start_and_fin
     if (CreateButtonAndButtonPressed(CLEAR_BUTTON_STRING.c_str(), CLEAR_BUTTON_TOOLTIP.c_str(), ButtonShouldBeEnabledInState(CLEAR_BUTTON_STRING.c_str(), current_state))) 
         HandleClearButton();
 
-    if (CreateButtonAndButtonPressed(PREVIOUS_BUTTON_STRING.c_str(), PREVIOUS_BUTTON_TOOLTIP.c_str(), ButtonShouldBeEnabledInState(PREVIOUS_BUTTON_STRING.c_str(), current_state) && decrement_possible)) 
-        HandlePreviousButton();
-
-    if (CreateButtonAndButtonPressed(NEXT_BUTTON_STRING.c_str(), NEXT_BUTTON_TOOLTIP.c_str(), ButtonShouldBeEnabledInState(NEXT_BUTTON_STRING.c_str(), current_state) && increment_possible)) 
-        HandleNextButton();
-
-    // if (CreateButtonAndButtonPressed(BACKWARD_BUTTON_STRING.c_str(), BACKWARD_BUTTON_TOOLTIP.c_str(), ButtonShouldBeEnabledInState(BACKWARD_BUTTON_STRING.c_str(), current_state) && decrement_possible)) 
-    //     HandleBackwardButton();
-
-    // if (CreateButtonAndButtonPressed(FORWARD_BUTTON_STRING.c_str(), FORWARD_BUTTON_TOOLTIP.c_str(), ButtonShouldBeEnabledInState(FORWARD_BUTTON_STRING.c_str(), current_state) && increment_possible)) 
-    //     HandleForwardButton();
+    if (CreateButtonAndButtonPressed(RESET_BUTTON_STRING.c_str(), RESET_BUTTON_TOOLTIP.c_str(), ButtonShouldBeEnabledInState(RESET_BUTTON_STRING.c_str(), current_state))) 
+        HandleResetButton();
 
     if (CreateButtonAndButtonPressed(COARSERGRID_BUTTON_STRING.c_str(), COARSERGRID_BUTTON_TOOLTIP .c_str(), ButtonShouldBeEnabledInState(COARSERGRID_BUTTON_STRING.c_str(), current_state) && cell_size_increasable)) 
         HandleCoarserGridButton();
@@ -42,8 +33,6 @@ void UIElementsManager::CreateUIElements(State current_state, bool start_and_fin
 
     CreateSelector(current_state == State::Idle);
 
-    // if (CreateButtonAndButtonPressed(RESET_BUTTON_STRING.c_str(), RESET_BUTTON_TOOLTIP.c_str(), ButtonShouldBeEnabledInState(RESET_BUTTON_STRING.c_str(), current_state)))                             
-    //     HandleResetButton();
 
     if (CreateButtonAndButtonPressed(HELP_BUTTON_STRING.c_str(), HELP_BUTTON_TOOLTIP.c_str(), ButtonShouldBeEnabledInState(HELP_BUTTON_STRING.c_str(), current_state)))
         HandleHelpButton();
@@ -168,8 +157,6 @@ void UIElementsManager::HandleResetButton() {
     /*
     Set state to idle
     Reset state of the algorithm
-    Reset the grid
-    Reset the settings
     */
 }
 
@@ -181,42 +168,6 @@ void UIElementsManager::HandleClearButton() {
     Reset state of the algorithm
     Reset the grid
     */
-}
-
-void UIElementsManager::HandleNextButton() {
-    for (auto observer: NextButtonObservers) observer->NotifyNextButton();
-
-    /*
-    Set algorithm to next step
-    Update grid
-    */
-}
-
-void UIElementsManager::HandlePreviousButton() {
-    for (auto observer: PreviousButtonObservers) observer->NotifyPreviousButton();
-
-    /*
-    Set algorithm to previous step
-    Update grid
-    */
-}
-
-void UIElementsManager::HandleForwardButton() {
-    for (auto observer: ForwardButtonObservers) observer->NotifyForwardButton();
-
-    /*
-    Set algorithm to final step
-    Update grid
-    */
-}
-
-void UIElementsManager::HandleBackwardButton() {
-    for (auto observer: BackwardButtonObservers) observer->NotifyBackwardButton();
-    
-    /*
-    Set algorithm to first step
-    Update grid
-    */ 
 }
 
 void UIElementsManager::HandleFinerGridButton() {

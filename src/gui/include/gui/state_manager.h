@@ -16,10 +16,10 @@ enum class State {
 using BUTTON_ENABLED_STATES_TYPE = std::unordered_map<State, std::unordered_set<std::string>>;
 /* For each state, the button (name) that should be enabled. */
 static const BUTTON_ENABLED_STATES_TYPE BUTTON_ENABLED_STATES_TABLE = {
-    {State::Idle, {START_BUTTON_STRING, RESET_BUTTON_STRING, CLEAR_BUTTON_STRING, FINERGRID_BUTTON_STRING, COARSERGRID_BUTTON_STRING, HELP_BUTTON_STRING}},
+    {State::Idle, {START_BUTTON_STRING, CLEAR_BUTTON_STRING, FINERGRID_BUTTON_STRING, COARSERGRID_BUTTON_STRING, HELP_BUTTON_STRING}},
     {State::Running, {PAUSE_BUTTON_STRING, RESET_BUTTON_STRING, CLEAR_BUTTON_STRING, HELP_BUTTON_STRING}},
-    {State::Paused, {RESUME_BUTTON_STRING, RESET_BUTTON_STRING, CLEAR_BUTTON_STRING, PREVIOUS_BUTTON_STRING, NEXT_BUTTON_STRING, FORWARD_BUTTON_STRING, BACKWARD_BUTTON_STRING, HELP_BUTTON_STRING}},
-    {State::Finished, {RESET_BUTTON_STRING, CLEAR_BUTTON_STRING, PREVIOUS_BUTTON_STRING, BACKWARD_BUTTON_STRING, HELP_BUTTON_STRING}}
+    {State::Paused, {RESUME_BUTTON_STRING, RESET_BUTTON_STRING, CLEAR_BUTTON_STRING, HELP_BUTTON_STRING}},
+    {State::Finished, {RESET_BUTTON_STRING, CLEAR_BUTTON_STRING, HELP_BUTTON_STRING}}
 };
 
 class StateManager: 
@@ -27,11 +27,7 @@ class StateManager:
     public IPauseButtonObserver,
     public IResumeButtonObserver, 
     public IResetButtonObserver,
-    public IClearButtonObserver,
-    public INextButtonObserver,
-    public IPreviousButtonObserver,
-    public IForwardButtonObserver,
-    public IBackwardButtonObserver
+    public IClearButtonObserver
 {
 private:
     enum State current_state;
@@ -54,8 +50,4 @@ public:
     void NotifyResumeButton() override {ChangeState(State::Running);}
     void NotifyResetButton() override {ChangeState(State::Idle);}
     void NotifyClearButton() override {ChangeState(State::Idle);}
-    void NotifyNextButton() override {ChangeState(State::Paused);}
-    void NotifyPreviousButton() override {ChangeState(State::Paused);}
-    void NotifyForwardButton() override {ChangeState(State::Finished);}
-    void NotifyBackwardButton() override {ChangeState(State::Paused);}
 };

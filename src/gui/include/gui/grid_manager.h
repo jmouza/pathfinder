@@ -50,8 +50,8 @@ struct Cell {
 };
 
 class GridManager:
-    public IResetButtonObserver,
     public IClearButtonObserver,
+    public IResetButtonObserver,
     public IFinerGridButtonObserver,
     public ICoarserGridButtonObserver
 {
@@ -82,11 +82,12 @@ private:
     
     void SetStartCell(Cell &cell);
     void SetFinishCell(Cell &cell);
+    void ResetGrid();
+    void ClearExploredAndPathNodes();
 public:
     void CreateCellsInGrid();
     void UpdateGrid(SetOfPositions explored_positions, SetOfPositions path_positions);
     void DrawGrid() const;
-    void ResetGrid();
 
     void HandleMouseClick(MouseClickType click_type, PixelCoordinate pixel_coordindate);
     
@@ -100,8 +101,8 @@ public:
     Position GetStartPosition() const;
     Position GetFinishPosition() const;
 
-    void NotifyResetButton() override;
     void NotifyClearButton() override;
+    void NotifyResetButton() override;
     void NotifyFinerGridButton() override;
     void NotifyCoarserGridButton() override;
 };

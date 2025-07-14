@@ -40,6 +40,13 @@ void GridManager::ResetGrid() {
     last_selected = nullptr;
 }
 
+void GridManager::ClearExploredAndPathNodes() {
+    for (auto &cell: cells) {
+        if (cell.cell_type == CellType::Discovered || cell.cell_type == CellType::Path) {
+            cell.SetCellType(CellType::Default);
+        }
+    }}
+
 void GridManager::UpdateGrid(SetOfPositions explored_positions, SetOfPositions path_positions) {
     if (!nr_of_rows_and_cols) throw std::runtime_error("`nr_of_rows_and_cols` not set, call SetNumberOfRowsAndCols() first.");
 
@@ -178,12 +185,12 @@ Position GridManager::GetFinishPosition() const {
     return finish_cell->cell_coordinate;
 }
 
-void GridManager::NotifyResetButton() {
+void GridManager::NotifyClearButton() {
     ResetGrid();
 }
 
-void GridManager::NotifyClearButton() {
-    ResetGrid();
+void GridManager::NotifyResetButton() {
+    ClearExploredAndPathNodes();
 }
 
 void GridManager::NotifyFinerGridButton() {
