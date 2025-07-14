@@ -15,7 +15,6 @@ public:
     const PathfinderResult Execute() override;
 
 private:
-    PathfinderResult result;
     SetOfNodes explored_nodes;
     std::queue<std::pair<Node, VectorOfPositions>> queue; /* node and path to that node */
 

@@ -17,6 +17,7 @@ public:
     virtual const PathfinderResult Execute() = 0;
 
 protected:
+    PathfinderResult result;
     std::optional<Grid> grid;
     bool IsObstacle(const Node node) const {return node.IsObstacle();}
 };

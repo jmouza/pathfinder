@@ -17,7 +17,6 @@ public:
 
 private:
     const double INFINITY = std::numeric_limits<double>::infinity();
-    PathfinderResult result;
     SetOfNodes explored_nodes;
     SetOfNodes unexplored_nodes;
     std::unordered_map<Node, double, Node::HashFunction> distance_to_start_node;
