@@ -11,6 +11,7 @@ class BreadthFirstSearch : public PathfinderAlgorithm
 public:
     BreadthFirstSearch(): PathfinderAlgorithm() {};
     const PathfinderResult Execute() override;
+    void ClearState() override;
 
 private:
     SetOfNodes explored_nodes;

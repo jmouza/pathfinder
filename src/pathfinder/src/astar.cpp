@@ -133,3 +133,13 @@ void AStar::ConstructPath() {
 
     result.path = sequence;
 }
+
+void AStar::ClearState() {
+    open_set.clear();
+    distances_from_start_node.clear();
+    f_scores.clear();
+    came_from.clear();
+    explored_positions.clear();
+
+    PathfinderAlgorithm::ClearState();
+}

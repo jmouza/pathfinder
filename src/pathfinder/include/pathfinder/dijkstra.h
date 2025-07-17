@@ -12,6 +12,7 @@ class Dijkstra : public PathfinderAlgorithm
 public:
     Dijkstra(): PathfinderAlgorithm() {};
     const PathfinderResult Execute() override;
+    void ClearState() override;
 
 private:
     const double INFINITY = std::numeric_limits<double>::infinity();

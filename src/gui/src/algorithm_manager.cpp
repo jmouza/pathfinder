@@ -19,19 +19,13 @@ void AlgorithmManager::RunAlgorithm(int nr_of_rows_and_cols, Position start_posi
     switch (algorithm_type.value())
     {
     case Algorithm::BFS:
-        context.SetAlgorithm([]()
-            {return std::make_unique<BreadthFirstSearch>();
-        });
+        context.SetAlgorithm(std::make_unique<BreadthFirstSearch>());
         break;
     case Algorithm::Dijkstra:
-        context.SetAlgorithm([]()
-            {return std::make_unique<Dijkstra>();
-        });
+        context.SetAlgorithm(std::make_unique<Dijkstra>());
         break;
     case Algorithm::AStar:
-        context.SetAlgorithm([]()
-            {return std::make_unique<AStar>();
-        });
+        context.SetAlgorithm(std::make_unique<AStar>());
         break;
     default:
         break;

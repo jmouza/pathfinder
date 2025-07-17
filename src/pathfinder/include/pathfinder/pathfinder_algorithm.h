@@ -17,9 +17,12 @@ public:
     Execute the pathfinder algorithm on the given `grid`.
     */
     virtual const PathfinderResult Execute() = 0;
+    virtual void ClearState() {
+        grid.reset();
+        result = PathfinderResult();
+    }
 
 protected:
     PathfinderResult result;
     std::optional<Grid> grid;
-    bool IsObstacle(const Node node) const {return node.IsObstacle();}
 };

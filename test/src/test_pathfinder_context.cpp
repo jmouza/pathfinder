@@ -17,16 +17,13 @@ TEST_F(ContextTest, AlgorithmNotSetExecuteAlgorithm)
 
 TEST_F(ContextTest, AlgorithmNotSetGetInstance) 
 {
-    EXPECT_THROW(context.GetAlgorithmInstance(), std::runtime_error);
+    EXPECT_THROW(context.GetAlgorithmInstanceName(), std::runtime_error);
 }
 
 TEST_F(ContextTest, SetBFS)
 {
-    context.SetAlgorithm([]()
-        {return std::make_unique<BreadthFirstSearch>();
-    });
-
-    const char* algorithm_name = typeid(*context.GetAlgorithmInstance()).name();
+    context.SetAlgorithm(std::make_unique<BreadthFirstSearch>());
+    const char* algorithm_name = context.GetAlgorithmInstanceName();
     const char* expected = typeid(BreadthFirstSearch).name();
 
     EXPECT_EQ(algorithm_name, expected);
@@ -34,27 +31,31 @@ TEST_F(ContextTest, SetBFS)
 
 TEST_F(ContextTest, SetDijkstra)
 {
-    context.SetAlgorithm([]()
-        {return std::make_unique<Dijkstra>();
-    });
-
-    const char* algorithm_name = typeid(*context.GetAlgorithmInstance()).name();
+    context.SetAlgorithm(std::make_unique<Dijkstra>());
+    
+    const char* algorithm_name = context.GetAlgorithmInstanceName();
     const char* expected = typeid(Dijkstra).name();
+
+    EXPECT_EQ(algorithm_name, expected);
+}
+
+TEST_F(ContextTest, SetAStar)
+{
+    context.SetAlgorithm(std::make_unique<AStar>());
+    
+    const char* algorithm_name = context.GetAlgorithmInstanceName();
+    const char* expected = typeid(AStar).name();
 
     EXPECT_EQ(algorithm_name, expected);
 }
 
 TEST_F(ContextTest, OverwriteAlgorithmType)
 {
-    context.SetAlgorithm([]()
-        {return std::make_unique<Dijkstra>();
-    });
+    context.SetAlgorithm(std::make_unique<Dijkstra>());
+    
+    context.SetAlgorithm(std::make_unique<BreadthFirstSearch>());
 
-    context.SetAlgorithm([]()
-        {return std::make_unique<BreadthFirstSearch>();
-    });
-
-    const char* algorithm_name = typeid(*context.GetAlgorithmInstance()).name();
+    const char* algorithm_name = context.GetAlgorithmInstanceName();
     const char* expected = typeid(BreadthFirstSearch).name();
 
     EXPECT_EQ(algorithm_name, expected);
@@ -62,15 +63,10 @@ TEST_F(ContextTest, OverwriteAlgorithmType)
 
 TEST_F(ContextTest, SetSameAlgorithm)
 {
-    context.SetAlgorithm([]()
-        {return std::make_unique<Dijkstra>();
-    });
+    context.SetAlgorithm(std::make_unique<Dijkstra>());
+    context.SetAlgorithm(std::make_unique<Dijkstra>());
 
-    context.SetAlgorithm([]()
-        {return std::make_unique<Dijkstra>();
-    });
-
-    const char* algorithm_name = typeid(*context.GetAlgorithmInstance()).name();
+    const char* algorithm_name = context.GetAlgorithmInstanceName();
     const char* expected = typeid(Dijkstra).name();
 
     EXPECT_EQ(algorithm_name, expected);
@@ -78,9 +74,7 @@ TEST_F(ContextTest, SetSameAlgorithm)
 
 TEST_F(ContextTest, ExecuteAlgorithm)
 {
-    context.SetAlgorithm([]()
-        {return std::make_unique<Dijkstra>();
-    });
+    context.SetAlgorithm(std::make_unique<Dijkstra>());
 
     auto result = context.ExecuteAlgorithm(parameters);
 

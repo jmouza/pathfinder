@@ -103,3 +103,12 @@ void Dijkstra::ConstructPath() {
 
     result.path = sequence;
 }
+
+void Dijkstra::ClearState() {
+    explored_nodes.clear();
+    unexplored_nodes.clear();
+    distance_to_start_node.clear();
+    hop_nodes.clear();
+
+    PathfinderAlgorithm::ClearState();
+}

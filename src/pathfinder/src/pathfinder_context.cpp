@@ -3,21 +3,22 @@
 #include <utility>
 #include <stdexcept>
 
-void PathfinderContext::SetAlgorithm(std::function<std::unique_ptr<PathfinderAlgorithm>()> algorithm_factory) {
-    algorithm_factory_ = std::move(algorithm_factory);
+void PathfinderContext::SetAlgorithm(std::unique_ptr<PathfinderAlgorithm> &&algorithm) {
+    algorithm_ = std::move(algorithm);
 }
 
 PathfinderResult PathfinderContext::ExecuteAlgorithm(ExecutionParameters parameters) const {
-    if (!algorithm_factory_) {
-        throw std::runtime_error("Algorithm factory function not set!");
+    if (!algorithm_) {
+        throw std::runtime_error("Algorithm not set!");
     }
 
     Grid grid = CreateGrid(parameters);
 
-    auto algorithm = algorithm_factory_();
-    algorithm->SetGrid(grid);
+    algorithm_->SetGrid(grid);
 
-    PathfinderResult result = algorithm->Execute();
+    PathfinderResult result = algorithm_->Execute();
+
+    algorithm_->ClearState();
 
     return result;
 }
@@ -34,10 +35,10 @@ Grid PathfinderContext::CreateGrid(ExecutionParameters parameters) const {
     return grid;
 }
 
-std::unique_ptr<PathfinderAlgorithm> PathfinderContext::GetAlgorithmInstance() const {
-    if (!algorithm_factory_) {
-        throw std::runtime_error("Algorithm factory function not set!");
+const char* PathfinderContext::GetAlgorithmInstanceName() const {
+    if (!algorithm_) {
+        throw std::runtime_error("Algorithm not set!");
     }
 
-    return algorithm_factory_();
+    return typeid(*algorithm_).name();
 }

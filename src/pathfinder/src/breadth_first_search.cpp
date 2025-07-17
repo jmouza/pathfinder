@@ -54,3 +54,13 @@ void BreadthFirstSearch::HandleNeighbors(Node current_node, VectorOfPositions pa
         }
     }
 }
+
+void BreadthFirstSearch::ClearState() {
+    explored_nodes.clear();
+    
+    while (!queue.empty()) {
+        queue.pop();
+    }
+
+    PathfinderAlgorithm::ClearState();
+}

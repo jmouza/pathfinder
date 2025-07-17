@@ -128,66 +128,30 @@ bool UIElementsManager::ButtonShouldBeEnabledInState(const char* button_string, 
 
 void UIElementsManager::HandleStartButton() {
     for (auto observer: StartButtonObservers) observer->NotifyStartButton();
-
-    /*
-    Set state to start
-    Execute algorithm
-    */
 }
 
 void UIElementsManager::HandlePauseButton() {
     for (auto observer: PauseButtonObservers) observer->NotifyPauseButton();
-
-    /*
-    Set state to pause
-    */
 }
 
 void UIElementsManager::HandleResumeButton() {
     for (auto observer: ResumeButtonObservers) observer->NotifyResumeButton();
-
-    /*
-    Set state to pause
-    */
 }
 
 void UIElementsManager::HandleResetButton() {
     for (auto observer: ResetButtonObservers) observer->NotifyResetButton();
-
-    /*
-    Set state to idle
-    Reset state of the algorithm
-    */
 }
 
 void UIElementsManager::HandleClearButton() {
     for (auto observer: ClearButtonObservers) observer->NotifyClearButton();
-
-    /*
-    Set state to idle
-    Reset state of the algorithm
-    Reset the grid
-    */
 }
 
 void UIElementsManager::HandleFinerGridButton() {
     for (auto observer: FinerGridButtonObservers) observer->NotifyFinerGridButton();
-
-    /*
-    Decrease cell size in settings
-    Notify grid that nr_rows_cols changed
-    Recreate the grid
-    */
 }
 
 void UIElementsManager::HandleCoarserGridButton() {
     for (auto observer: CoarserGridButtonObservers) observer->NotifyCoarserGridButton();
-
-    /*
-    Increase cell size in settings
-    Notify grid that nr_rows_cols changed
-    Recreate the grid
-    */
 }
 
 void UIElementsManager::HandleHelpButton() const {
