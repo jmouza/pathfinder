@@ -16,7 +16,7 @@ protected:
     PathfinderAlgorithm* algorithm;
 };
 
-typedef ::testing::Types<BreadthFirstSearch, Dijkstra> Implementations;
+typedef ::testing::Types<BreadthFirstSearch, Dijkstra, AStar> Implementations;
 TYPED_TEST_SUITE(PathfinderAlgorithmTest, Implementations);
 
 TYPED_TEST(PathfinderAlgorithmTest, GridNotSet) {
@@ -223,6 +223,38 @@ TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnGridWithStartPointInMiddleLoop)
 
     EXPECT_TRUE(result.found_path);
     EXPECT_TRUE(ResultContainsCorrectPath(result, START_POINT_IN_THE_MIDDLE_LOOP_POSITIONS));
+    EXPECT_FALSE(result.explored_steps.empty());
+    EXPECT_TRUE(ExploredPositionsAreIncreasing(result));
+    EXPECT_TRUE(ExploredPositionsFirstStepIsReasonable(result, grid.GetStartNode()));
+    EXPECT_TRUE(ExploredPositionsLastStepIsReasonable(result, grid.GetStartNode(), grid.GetFinishNode()));
+    EXPECT_TRUE(ExploredPositionsNeverContainsObstacleNode(result, grid));
+}
+
+TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnCornerToCornerSquarePath)
+{
+    Grid grid = GetGridFromString(CORNER_TO_CORNER_SQUARE);
+    this->algorithm->SetGrid(grid);
+    
+    PathfinderResult result = this->algorithm->Execute();
+
+    EXPECT_TRUE(result.found_path);
+    EXPECT_EQ(result.path.size(), CORNER_TO_CORNER_SQUARE_PATH_LENGTH);
+    EXPECT_FALSE(result.explored_steps.empty());
+    EXPECT_TRUE(ExploredPositionsAreIncreasing(result));
+    EXPECT_TRUE(ExploredPositionsFirstStepIsReasonable(result, grid.GetStartNode()));
+    EXPECT_TRUE(ExploredPositionsLastStepIsReasonable(result, grid.GetStartNode(), grid.GetFinishNode()));
+    EXPECT_TRUE(ExploredPositionsNeverContainsObstacleNode(result, grid));
+}
+
+TYPED_TEST(PathfinderAlgorithmTest, ExecuteOnCornerToCornerPath)
+{
+    Grid grid = GetGridFromString(CORNER_TO_CORNER);
+    this->algorithm->SetGrid(grid);
+    
+    PathfinderResult result = this->algorithm->Execute();
+
+    EXPECT_TRUE(result.found_path);
+    EXPECT_EQ(result.path.size(), CORNER_TO_CORNER_PATH_LENGTH);
     EXPECT_FALSE(result.explored_steps.empty());
     EXPECT_TRUE(ExploredPositionsAreIncreasing(result));
     EXPECT_TRUE(ExploredPositionsFirstStepIsReasonable(result, grid.GetStartNode()));

@@ -1,5 +1,6 @@
 add_library(
     pathfinder STATIC
+    src/astar.cpp
     src/breadth_first_search.cpp
     src/dijkstra.cpp
     src/grid.cpp

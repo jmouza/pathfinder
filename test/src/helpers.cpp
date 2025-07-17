@@ -84,6 +84,8 @@ namespace TestHelpers
     }
 
     bool ExploredPositionsFirstStepIsReasonable(PathfinderResult result, Node start_node) {
+        if (result.explored_steps.empty()) return false;
+
         bool starts_with_one_node = (result.explored_steps.front().size() == 1);
         bool starts_with_start_node = (result.explored_steps.front().count(start_node.GetPosition()) == 1);
 
@@ -91,6 +93,8 @@ namespace TestHelpers
     }
 
     bool ExploredPositionsLastStepIsReasonable(PathfinderResult result, Node start_node, Node finish_node) {
+        if (result.explored_steps.empty()) return false;
+
         bool ends_with_more_than_one_node = (result.explored_steps.back().size() > 1);
         bool last_step_contains_start_node = (result.explored_steps.back().count(start_node.GetPosition()) == 1);
         bool last_step_contains_finish_node = (result.explored_steps.back().count(finish_node.GetPosition()) == 1);

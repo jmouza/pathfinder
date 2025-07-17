@@ -29,9 +29,9 @@ void AlgorithmManager::RunAlgorithm(int nr_of_rows_and_cols, Position start_posi
         });
         break;
     case Algorithm::AStar:
-        // context.SetAlgorithm([]()
-        //     {return std::make_unique<AStar>();
-        // });
+        context.SetAlgorithm([]()
+            {return std::make_unique<AStar>();
+        });
         break;
     default:
         break;

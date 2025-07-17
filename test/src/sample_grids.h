@@ -214,6 +214,29 @@ static const std::vector<Position> START_POINT_IN_THE_MIDDLE_LOOP_POSITIONS = {
     Position(9,0)
 };
 
+static const std::string CORNER_TO_CORNER_SQUARE =
+    "S#########\n"
+    "##########\n"
+    "##########\n"
+    "##########\n"
+    "##########\n"
+    "##########\n"
+    "##########\n"
+    "##########\n"
+    "##########\n"
+    "#########F\n";
+
+static const int CORNER_TO_CORNER_SQUARE_PATH_LENGTH = 19;
+
+static const std::string CORNER_TO_CORNER =
+    "S#########\n"
+    "##########\n"
+    "##########\n"
+    "##########\n"
+    "#########F\n";
+
+static const int CORNER_TO_CORNER_PATH_LENGTH = 14;
+
 static const std::string GRID_WITH_ONE_NEIGHBOR =
     "###\n"
     "OSO\n"
@@ -224,7 +247,7 @@ static const std::string GRID_WITH_TWO_NEIGHBORS =
     "OS#\n"
     "#OF\n";
 
-    static const std::string GRID_WITH_THREE_NEIGHBORS =
+static const std::string GRID_WITH_THREE_NEIGHBORS =
     "###\n"
     "OS#\n"
     "##F\n";
