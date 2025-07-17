@@ -2,6 +2,8 @@
 C++ project to visualize different pathfinder algorithms on a 2D grid. 
 For the GUI it uses [imgui](https://github.com/ocornut/imgui).
 
+<img src="./docs/demo.gif" alt="demo" width="500" height="500">
+
 ## Build and Run
 ### External Requirements for imgui
 - **Platform backend**: SDL2: `sdl2-config --version // 2.30.0`
