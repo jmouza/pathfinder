@@ -7,8 +7,6 @@
 #include <limits>
 #include <utility>
 
-using SetOfNodes = std::unordered_set<Node, Node::HashFunction>;
-
 class Dijkstra : public PathfinderAlgorithm
 {
 public:

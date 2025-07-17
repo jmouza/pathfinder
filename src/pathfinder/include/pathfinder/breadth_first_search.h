@@ -6,8 +6,6 @@
 #include <queue>
 #include <utility>
 
-using SetOfNodes = std::unordered_set<Node, Node::HashFunction>;
-
 class BreadthFirstSearch : public PathfinderAlgorithm
 {
 public:

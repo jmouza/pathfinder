@@ -5,6 +5,8 @@
 
 #include <optional>
 
+using SetOfNodes = std::unordered_set<Node, Node::HashFunction>;
+
 class PathfinderAlgorithm 
 {
 public:
